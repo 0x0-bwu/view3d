@@ -1,5 +1,4 @@
 #include <QApplication>
-#include "ShaderView.h"
 #include "ModelView.h"
 #include <iostream>
 int main(int argc, char *argv[])
@@ -13,7 +12,6 @@ int main(int argc, char *argv[])
 //     SurfaceModelView viewer;
     TetrahedronModelView viewer;
     // SurfaceMeshView viewer;
-    // ShaderView viewer;
     viewer.setWindowTitle("test");
     viewer.show();
 

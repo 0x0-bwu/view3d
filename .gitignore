@@ -1,0 +1,10 @@
+*.o
+*.os
+*.a
+*.so
+*.exe
+*.pro
+*.pro.user
+build
+.sconsign.dblite
+
