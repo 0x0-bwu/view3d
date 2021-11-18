@@ -58,7 +58,7 @@ FrameModelView::FrameModelView(QWidget * parent, Qt::WindowFlags flags)
     InitFromWktFile();
     // InitFromPolyFile();
     // InitFromDomDmcFile();
-    //InitFromConnectivityTest();
+    // InitFromConnectivityTest();
 }
 
 FrameModelView::~FrameModelView()
