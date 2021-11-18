@@ -1,10 +1,17 @@
 #ifndef VIEW_MODELVIEW_H
 #define VIEW_MODELVIEW_H
-#include "tree/BVH.hpp"
 #include "View3D.h"
 #include "Model.h"
 #include <memory>
-namespace generic{ namespace geometry{ namespace tri { template <typename point_t> class TriangleEvaluator; } } }
+namespace generic{
+namespace tree {
+namespace bvh {
+template <typename coor_t> class BVH;
+} }
+namespace geometry{
+namespace tri {
+template <typename point_t> class TriangleEvaluator;
+} } }
 
 namespace view {
 

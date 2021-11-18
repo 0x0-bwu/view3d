@@ -1,7 +1,8 @@
-ROOT_DIR = ..
-BUILD_OUTPUT = $$ROOT_DIR/build/debug
+ROOT_DIR = $$dirname(PWD)
+BUILD_OUTPUT = $$dirname(PWD)/build/debug
 CONFIG(release, debug | release) {
-    BUILD_OUTPUT = $$ROOT_DIR/build/release
+    BUILD_OUTPUT = $$dirname(PWD)/build/release
 }
 
-BUILD_LIB_PATH = BUILD_OUTPUT
+BUILD_LIB_PATH = $$BUILD_OUTPUT/bin
+GENERIC_LIB_PATH = $$ROOT_DIR/thirdpart

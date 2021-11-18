@@ -3,8 +3,14 @@
 *.a
 *.so
 *.exe
-*.pro
+*.Debug
+*.Release
+*.pro.user.*
 *.pro.user
+Makefile
+Makefile.Debug
+Makefile.Release
 build
 .sconsign.dblite
-
+.qmake.*
+TetViewer

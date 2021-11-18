@@ -1,7 +1,7 @@
 #ifndef VIEW_COLOR_H
 #define VIEW_COLOR_H
 #include <cstdint>
-#include "math/MathUtility.hpp"
+#include "generic/math/MathUtility.hpp"
 namespace view {
 
 namespace color{

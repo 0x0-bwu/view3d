@@ -2,10 +2,10 @@
 #define VIEW_MODEL_H
 #include "Config.h"
 #include "Color.h"
-#include "geometry/TriangulationRefinement.hpp"
-#include "geometry/Tetrahedralization.hpp"
-#include "geometry/GeometryTraits.hpp"
-#include "geometry/Topology.hpp"
+#include "generic/geometry/TriangulationRefinement.hpp"
+#include "generic/geometry/Tetrahedralization.hpp"
+#include "generic/geometry/GeometryTraits.hpp"
+#include "generic/geometry/Topology.hpp"
 #include <memory>
 #include <vector>
 #include <list>

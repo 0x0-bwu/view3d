@@ -1,11 +1,11 @@
 #ifndef VIEW_CONFIG_H
 #define VIEW_CONFIG_H
-#include "common/Macros.hpp"
-#include "geometry/Transform.hpp"
-#include "geometry/Vector.hpp"
-#include "geometry/Point.hpp"
-#include "geometry/Box.hpp"
-#include "math/Numbers.hpp"
+#include "generic/common/Macros.hpp"
+#include "generic/geometry/Transform.hpp"
+#include "generic/geometry/Vector.hpp"
+#include "generic/geometry/Point.hpp"
+#include "generic/geometry/Box.hpp"
+#include "generic/math/Numbers.hpp"
 #include "GL/glew.h"
 #include "GL/gl.h"
 #include <limits>

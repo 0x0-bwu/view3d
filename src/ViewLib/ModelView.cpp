@@ -1,13 +1,13 @@
 #include "ModelView.h"
 #include "Camera.h"
-#include "geometry/TetrahedralizationIO.hpp"
-#include "geometry/TriangleEvaluator.hpp"
-#include "geometry/Connectivity.hpp"
-#include "tree/BVHUtilityMT.hpp"
-#include "tools/Tools.hpp"
+#include "generic/geometry/TetrahedralizationIO.hpp"
+#include "generic/geometry/TriangleEvaluator.hpp"
+#include "generic/geometry/Connectivity.hpp"
+#include "generic/tree/BVHUtilityMT.hpp"
+#include "generic/tools/Tools.hpp"
 #include "Painter.h"
-#include "mesher/Mesher2D.h"
-#include "mesher/MeshFileUtility.h"
+#include "Mesher2D.h"
+#include "MeshFileUtility.h"
 #include <QApplication>
 #include <QMouseEvent>
 #include <QFileInfo>
@@ -204,8 +204,8 @@ void FrameModelView::InitFromConnectivityTest()
 
 void FrameModelView::InitFromDomDmcFile()
 {
+    using namespace emesh;
     using namespace geometry;
-    using namespace fem::mesh;
     QString fileName = QApplication::applicationDirPath() + "/../../../test/mesh/2";
     fileName = QFileInfo(fileName).absoluteFilePath();
 
@@ -227,8 +227,8 @@ SurfaceModelView::~SurfaceModelView()
 
 void SurfaceModelView::InitFromNodeEdgeFiles()
 {
+    using namespace emesh;
     using namespace geometry;
-    using namespace fem::mesh;
     QString dirPath = QApplication::applicationDirPath() + "/../../../test/tet/";
     QString nodeFile = dirPath + "fccsp.node";
     nodeFile = QFileInfo(nodeFile).canonicalFilePath();
@@ -247,8 +247,8 @@ void SurfaceModelView::InitFromNodeEdgeFiles()
 
 void SurfaceModelView::InitFromNodeEle4Files()
 {
+    using namespace emesh;
     using namespace geometry;
-    using namespace fem::mesh;
     QString dirPath = QApplication::applicationDirPath() + "/../../../test/tet/results/";
     QString nodeFile = dirPath + "result.node";
     QString eleFile = dirPath + "result.ele";
@@ -317,15 +317,15 @@ void SurfaceMeshView::InitFromMshFile()
     QString fileName = QApplication::applicationDirPath() + "/../../../test/msh/test.msh";
     fileName = QFileInfo(fileName).canonicalFilePath();
 
-    fem::mesh::MeshFileUtility::ImportMshFile(fileName.toStdString(), *m_triangulation, 1e6);
+    emesh::MeshFileUtility::ImportMshFile(fileName.toStdString(), *m_triangulation, 1e6);
     m_refinement.reset(new CurrentRefineMethod(*m_triangulation));
     m_refinement->SetParas(math::Rad(20), 25, 1e10);    
 }
 
 void SurfaceMeshView::InitFromDomDmcFile()
 {
+    using namespace emesh;
     using namespace geometry;
-    using namespace fem::mesh;
     
     MeshCtrl meshCtrl;
     meshCtrl.scale2Int = 100;
@@ -645,7 +645,7 @@ TetrahedronModelView::~TetrahedronModelView()
 void TetrahedronModelView::InitFromNodeEle4Files()
 {
     using namespace geometry;
-    QString dirPath = QApplication::applicationDirPath() + "/../../../test/tet/results/";
+    QString dirPath = QApplication::applicationDirPath() + "/../../../test/tet/";
     QString nodeFile = dirPath + "fccsp.1.node";
     QString eleFile = dirPath + "fccsp.1.ele";
 

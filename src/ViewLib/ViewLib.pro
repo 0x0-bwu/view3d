@@ -11,7 +11,8 @@ include(../View3D.pri)
 
 INCLUDEPATH = ./ \
               ../ \
-              ../../thirdpart \
+              $$GENERIC_LIB_PATH \
+              $$ROOT_DIR/thirdpart/emesh/src \
 
 win32:{
 INCLUDEPATH += C:\\Dev\\include\\
@@ -46,8 +47,8 @@ HEADERS += \
     View3D.h
 
 SOURCES += \
-    emesh/Mesher2D.cpp \
-    emesh/MeshFileUtility.cpp
+    $$ROOT_DIR/thirdpart/emesh/src/Mesher2D.cpp \
+    $$ROOT_DIR/thirdpart/emesh/src/MeshFileUtility.cpp
 
 SOURCES += \
     Action.cpp \
@@ -58,12 +59,9 @@ SOURCES += \
     Painter.cpp \
     View3D.cpp
 
-DESTDIR     = ../../$${BUILD_OUTPUT}/bin
-OBJECTS_DIR = ../../$${BUILD_OUTPUT}/obj/$${TARGET}/
-MOC_DIR     = ../../$${BUILD_OUTPUT}/moc/$${TARGET}/
-RCC_DIR     = ../../$${BUILD_OUTPUT}/rcc/$${TARGET}/
-UI_DIR      = ../../$${BUILD_OUTPUT}/ui/$${TARGET}/
-
-RESOURCES += \
-    res.qrc
+DESTDIR     = $$BUILD_OUTPUT/bin
+OBJECTS_DIR = $$BUILD_OUTPUT/obj/$${TARGET}/
+MOC_DIR     = $$BUILD_OUTPUT/moc/$${TARGET}/
+RCC_DIR     = $$BUILD_OUTPUT/rcc/$${TARGET}/
+UI_DIR      = $$BUILD_OUTPUT/ui/$${TARGET}/
 

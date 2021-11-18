@@ -17,7 +17,7 @@ CXX           = g++
 DEFINES       = -DQT_QML_DEBUG -DQT_OPENGL_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -g -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -w -g -std=gnu++1z -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I. -I. -I.. -I../../thirdpart -I../../../../Qt/5.15.2/gcc_64/include -I../../../../Qt/5.15.2/gcc_64/include/QtOpenGL -I../../../../Qt/5.15.2/gcc_64/include/QtWidgets -I../../../../Qt/5.15.2/gcc_64/include/QtGui -I../../../../Qt/5.15.2/gcc_64/include/QtCore -I../../../build/debug/moc/View3D -I/usr/include/libdrm -I../../../../Qt/5.15.2/gcc_64/mkspecs/linux-g++
+INCPATH       = -I. -I. -I.. -I../../thirdpart -I../../thirdpart/emesh/src -I../../../../Qt/5.15.2/gcc_64/include -I../../../../Qt/5.15.2/gcc_64/include/QtOpenGL -I../../../../Qt/5.15.2/gcc_64/include/QtWidgets -I../../../../Qt/5.15.2/gcc_64/include/QtGui -I../../../../Qt/5.15.2/gcc_64/include/QtCore -I../../build/debug/moc/View3D -I/usr/include/libdrm -I../../../../Qt/5.15.2/gcc_64/mkspecs/linux-g++
 QMAKE         = /home/bing/Qt/5.15.2/gcc_64/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -37,7 +37,7 @@ MOVE          = mv -f
 TAR           = tar -cf
 COMPRESS      = gzip -9f
 DISTNAME      = View3D1.0.0
-DISTDIR = /home/bing/code/build/debug/obj/View3D/View3D1.0.0
+DISTDIR = /home/bing/code/view3d/build/debug/obj/View3D/View3D1.0.0
 LINK          = g++
 LFLAGS        = -Wl,-rpath,/home/bing/Qt/5.15.2/gcc_64/lib -shared -Wl,-soname,libView3D.so.1
 LIBS          = $(SUBLIBS) -L/usr/lib/x86_64-linux-gnu/ -lGLU -lGLEW -L/usr/local/lib/ -lboost_serialization /home/bing/Qt/5.15.2/gcc_64/lib/libQt5OpenGL.so /home/bing/Qt/5.15.2/gcc_64/lib/libQt5Widgets.so /home/bing/Qt/5.15.2/gcc_64/lib/libQt5Gui.so /home/bing/Qt/5.15.2/gcc_64/lib/libQt5Core.so -lGL -lpthread   
@@ -48,35 +48,33 @@ STRIP         = strip
 
 ####### Output directory
 
-OBJECTS_DIR   = ../../../build/debug/obj/View3D/
+OBJECTS_DIR   = ../../build/debug/obj/View3D/
 
 ####### Files
 
-SOURCES       = ../../thirdpart/emesh/Mesher2D.cpp \
-		../../thirdpart/emesh/MeshFileUtility.cpp \
+SOURCES       = ../../thirdpart/emesh/src/Mesher2D.cpp \
+		../../thirdpart/emesh/src/MeshFileUtility.cpp \
 		Action.cpp \
 		Camera.cpp \
 		Frame.cpp \
 		Model.cpp \
 		ModelView.cpp \
 		Painter.cpp \
-		View3D.cpp ../../../build/debug/rcc/View3D/qrc_res.cpp \
-		../../../build/debug/moc/View3D/moc_Camera.cpp \
-		../../../build/debug/moc/View3D/moc_Frame.cpp \
-		../../../build/debug/moc/View3D/moc_View3D.cpp
-OBJECTS       = ../../../build/debug/obj/View3D/Mesher2D.o \
-		../../../build/debug/obj/View3D/MeshFileUtility.o \
-		../../../build/debug/obj/View3D/Action.o \
-		../../../build/debug/obj/View3D/Camera.o \
-		../../../build/debug/obj/View3D/Frame.o \
-		../../../build/debug/obj/View3D/Model.o \
-		../../../build/debug/obj/View3D/ModelView.o \
-		../../../build/debug/obj/View3D/Painter.o \
-		../../../build/debug/obj/View3D/View3D.o \
-		../../../build/debug/obj/View3D/qrc_res.o \
-		../../../build/debug/obj/View3D/moc_Camera.o \
-		../../../build/debug/obj/View3D/moc_Frame.o \
-		../../../build/debug/obj/View3D/moc_View3D.o
+		View3D.cpp ../../build/debug/moc/View3D/moc_Camera.cpp \
+		../../build/debug/moc/View3D/moc_Frame.cpp \
+		../../build/debug/moc/View3D/moc_View3D.cpp
+OBJECTS       = ../../build/debug/obj/View3D/Mesher2D.o \
+		../../build/debug/obj/View3D/MeshFileUtility.o \
+		../../build/debug/obj/View3D/Action.o \
+		../../build/debug/obj/View3D/Camera.o \
+		../../build/debug/obj/View3D/Frame.o \
+		../../build/debug/obj/View3D/Model.o \
+		../../build/debug/obj/View3D/ModelView.o \
+		../../build/debug/obj/View3D/Painter.o \
+		../../build/debug/obj/View3D/View3D.o \
+		../../build/debug/obj/View3D/moc_Camera.o \
+		../../build/debug/obj/View3D/moc_Frame.o \
+		../../build/debug/obj/View3D/moc_View3D.o
 DIST          = ../../../../Qt/5.15.2/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../../Qt/5.15.2/gcc_64/mkspecs/common/unix.conf \
 		../../../../Qt/5.15.2/gcc_64/mkspecs/common/linux.conf \
@@ -264,8 +262,8 @@ DIST          = ../../../../Qt/5.15.2/gcc_64/mkspecs/features/spec_pre.prf \
 		ModelView.h \
 		Painter.h \
 		ShaderView.h \
-		View3D.h ../../thirdpart/emesh/Mesher2D.cpp \
-		../../thirdpart/emesh/MeshFileUtility.cpp \
+		View3D.h ../../thirdpart/emesh/src/Mesher2D.cpp \
+		../../thirdpart/emesh/src/MeshFileUtility.cpp \
 		Action.cpp \
 		Camera.cpp \
 		Frame.cpp \
@@ -274,9 +272,9 @@ DIST          = ../../../../Qt/5.15.2/gcc_64/mkspecs/features/spec_pre.prf \
 		Painter.cpp \
 		View3D.cpp
 QMAKE_TARGET  = View3D
-DESTDIR       = ../../../build/debug/bin/
+DESTDIR       = ../../build/debug/bin/
 TARGET        = libView3D.so.1.0.0
-TARGETA       = ../../../build/debug/bin/libView3D.a
+TARGETA       = ../../build/debug/bin/libView3D.a
 TARGET0       = libView3D.so
 TARGETD       = libView3D.so.1.0.0
 TARGET1       = libView3D.so.1
@@ -286,27 +284,27 @@ TARGET2       = libView3D.so.1.0
 first: all
 ####### Build rules
 
-../../../build/debug/bin/libView3D.so.1.0.0:  $(OBJECTS) $(SUBLIBS) $(OBJCOMP)  
-	@test -d ../../../build/debug/bin/ || mkdir -p ../../../build/debug/bin/
+../../build/debug/bin/libView3D.so.1.0.0:  $(OBJECTS) $(SUBLIBS) $(OBJCOMP)  
+	@test -d ../../build/debug/bin/ || mkdir -p ../../build/debug/bin/
 	-$(DEL_FILE) $(TARGET) $(TARGET0) $(TARGET1) $(TARGET2)
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(LIBS) $(OBJCOMP)
 	-ln -s $(TARGET) $(TARGET0)
 	-ln -s $(TARGET) $(TARGET1)
 	-ln -s $(TARGET) $(TARGET2)
-	-$(DEL_FILE) ../../../build/debug/bin/$(TARGET)
-	-$(MOVE) $(TARGET) ../../../build/debug/bin/$(TARGET)
-	-$(DEL_FILE) ../../../build/debug/bin/$(TARGET0)
-	-$(DEL_FILE) ../../../build/debug/bin/$(TARGET1)
-	-$(DEL_FILE) ../../../build/debug/bin/$(TARGET2)
-	-$(MOVE) $(TARGET0) ../../../build/debug/bin/$(TARGET0)
-	-$(MOVE) $(TARGET1) ../../../build/debug/bin/$(TARGET1)
-	-$(MOVE) $(TARGET2) ../../../build/debug/bin/$(TARGET2)
+	-$(DEL_FILE) ../../build/debug/bin/$(TARGET)
+	-$(MOVE) $(TARGET) ../../build/debug/bin/$(TARGET)
+	-$(DEL_FILE) ../../build/debug/bin/$(TARGET0)
+	-$(DEL_FILE) ../../build/debug/bin/$(TARGET1)
+	-$(DEL_FILE) ../../build/debug/bin/$(TARGET2)
+	-$(MOVE) $(TARGET0) ../../build/debug/bin/$(TARGET0)
+	-$(MOVE) $(TARGET1) ../../build/debug/bin/$(TARGET1)
+	-$(MOVE) $(TARGET2) ../../build/debug/bin/$(TARGET2)
 
 
 
-staticlib: ../../../build/debug/bin/libView3D.a
+staticlib: ../../build/debug/bin/libView3D.a
 
-../../../build/debug/bin/libView3D.a:  $(OBJECTS) $(OBJCOMP) 
+../../build/debug/bin/libView3D.a:  $(OBJECTS) $(OBJCOMP) 
 	-$(DEL_FILE) $(TARGETA) 
 	$(AR) $(TARGETA) $(OBJECTS)
 
@@ -488,8 +486,7 @@ Makefile: ViewLib.pro ../../../../Qt/5.15.2/gcc_64/mkspecs/linux-g++/qmake.conf 
 		../../../../Qt/5.15.2/gcc_64/mkspecs/features/exceptions.prf \
 		../../../../Qt/5.15.2/gcc_64/mkspecs/features/yacc.prf \
 		../../../../Qt/5.15.2/gcc_64/mkspecs/features/lex.prf \
-		ViewLib.pro \
-		res.qrc
+		ViewLib.pro
 	$(QMAKE) -o Makefile ViewLib.pro -spec linux-g++ CONFIG+=debug CONFIG+=qml_debug
 ../../../../Qt/5.15.2/gcc_64/mkspecs/features/spec_pre.prf:
 ../../../../Qt/5.15.2/gcc_64/mkspecs/common/unix.conf:
@@ -670,14 +667,13 @@ Makefile: ViewLib.pro ../../../../Qt/5.15.2/gcc_64/mkspecs/linux-g++/qmake.conf 
 ../../../../Qt/5.15.2/gcc_64/mkspecs/features/yacc.prf:
 ../../../../Qt/5.15.2/gcc_64/mkspecs/features/lex.prf:
 ViewLib.pro:
-res.qrc:
 qmake: FORCE
 	@$(QMAKE) -o Makefile ViewLib.pro -spec linux-g++ CONFIG+=debug CONFIG+=qml_debug
 
 qmake_all: FORCE
 
 
-all: Makefile ../../../build/debug/bin/libView3D.so.1.0.0
+all: Makefile ../../build/debug/bin/libView3D.so.1.0.0
 
 dist: distdir FORCE
 	(cd `dirname $(DISTDIR)` && $(TAR) $(DISTNAME).tar $(DISTNAME) && $(COMPRESS) $(DISTNAME).tar) && $(MOVE) `dirname $(DISTDIR)`/$(DISTNAME).tar.gz . && $(DEL_FILE) -r $(DISTDIR)
@@ -685,10 +681,9 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents res.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents ../../../../Qt/5.15.2/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents Action.h Camera.h Color.h Config.h Frame.h Model.h ModelView.h Painter.h ShaderView.h View3D.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../../thirdpart/emesh/Mesher2D.cpp ../../thirdpart/emesh/MeshFileUtility.cpp Action.cpp Camera.cpp Frame.cpp Model.cpp ModelView.cpp Painter.cpp View3D.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../../thirdpart/emesh/src/Mesher2D.cpp ../../thirdpart/emesh/src/MeshFileUtility.cpp Action.cpp Camera.cpp Frame.cpp Model.cpp ModelView.cpp Painter.cpp View3D.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -697,8 +692,8 @@ clean: compiler_clean
 
 
 distclean: clean 
-	-$(DEL_FILE) ../../../build/debug/bin/$(TARGET) 
-	-$(DEL_FILE) ../../../build/debug/bin/$(TARGET0) ../../../build/debug/bin/$(TARGET1) ../../../build/debug/bin/$(TARGET2) $(TARGETA)
+	-$(DEL_FILE) ../../build/debug/bin/$(TARGET) 
+	-$(DEL_FILE) ../../build/debug/bin/$(TARGET0) ../../build/debug/bin/$(TARGET1) ../../build/debug/bin/$(TARGET2) $(TARGETA)
 	-$(DEL_FILE) Makefile
 
 
@@ -712,24 +707,35 @@ check: first
 
 benchmark: first
 
-compiler_rcc_make_all: ../../../build/debug/rcc/View3D/qrc_res.cpp
+compiler_rcc_make_all:
 compiler_rcc_clean:
-	-$(DEL_FILE) ../../../build/debug/rcc/View3D/qrc_res.cpp
-../../../build/debug/rcc/View3D/qrc_res.cpp: res.qrc \
-		../../../../Qt/5.15.2/gcc_64/bin/rcc
-	/home/bing/Qt/5.15.2/gcc_64/bin/rcc -name res res.qrc -o ../../../build/debug/rcc/View3D/qrc_res.cpp
-
-compiler_moc_predefs_make_all: ../../../build/debug/moc/View3D/moc_predefs.h
+compiler_moc_predefs_make_all: ../../build/debug/moc/View3D/moc_predefs.h
 compiler_moc_predefs_clean:
-	-$(DEL_FILE) ../../../build/debug/moc/View3D/moc_predefs.h
-../../../build/debug/moc/View3D/moc_predefs.h: ../../../../Qt/5.15.2/gcc_64/mkspecs/features/data/dummy.cpp
-	g++ -pipe -w -g -std=gnu++1z -Wall -Wextra -dM -E -o ../../../build/debug/moc/View3D/moc_predefs.h ../../../../Qt/5.15.2/gcc_64/mkspecs/features/data/dummy.cpp
+	-$(DEL_FILE) ../../build/debug/moc/View3D/moc_predefs.h
+../../build/debug/moc/View3D/moc_predefs.h: ../../../../Qt/5.15.2/gcc_64/mkspecs/features/data/dummy.cpp
+	g++ -pipe -w -g -std=gnu++1z -Wall -Wextra -dM -E -o ../../build/debug/moc/View3D/moc_predefs.h ../../../../Qt/5.15.2/gcc_64/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: ../../../build/debug/moc/View3D/moc_Camera.cpp ../../../build/debug/moc/View3D/moc_Frame.cpp ../../../build/debug/moc/View3D/moc_View3D.cpp
+compiler_moc_header_make_all: ../../build/debug/moc/View3D/moc_Camera.cpp ../../build/debug/moc/View3D/moc_Frame.cpp ../../build/debug/moc/View3D/moc_View3D.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) ../../../build/debug/moc/View3D/moc_Camera.cpp ../../../build/debug/moc/View3D/moc_Frame.cpp ../../../build/debug/moc/View3D/moc_View3D.cpp
-../../../build/debug/moc/View3D/moc_Camera.cpp: Camera.h \
+	-$(DEL_FILE) ../../build/debug/moc/View3D/moc_Camera.cpp ../../build/debug/moc/View3D/moc_Frame.cpp ../../build/debug/moc/View3D/moc_View3D.cpp
+../../build/debug/moc/View3D/moc_Camera.cpp: Camera.h \
 		Config.h \
+		../../thirdpart/generic/common/Macros.hpp \
+		../../thirdpart/generic/common/Version.hpp \
+		../../thirdpart/generic/geometry/Transform.hpp \
+		../../thirdpart/generic/math/Numbers.hpp \
+		../../thirdpart/generic/geometry/Geometries.hpp \
+		../../thirdpart/generic/geometry/Point.hpp \
+		../../thirdpart/generic/math/MathUtility.hpp \
+		../../thirdpart/generic/common/Traits.hpp \
+		../../thirdpart/generic/geometry/Segment.hpp \
+		../../thirdpart/generic/geometry/Triangle.hpp \
+		../../thirdpart/generic/geometry/Common.hpp \
+		../../thirdpart/generic/common/Exception.hpp \
+		../../thirdpart/generic/geometry/Box.hpp \
+		../../thirdpart/generic/geometry/Polygon.hpp \
+		../../thirdpart/generic/geometry/PolygonWithHoles.hpp \
+		../../thirdpart/generic/geometry/Vector.hpp \
 		Frame.h \
 		Action.h \
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/QObject \
@@ -804,12 +810,28 @@ compiler_moc_header_clean:
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/QTimer \
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/qtimer.h \
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/qbasictimer.h \
-		../../../build/debug/moc/View3D/moc_predefs.h \
+		../../build/debug/moc/View3D/moc_predefs.h \
 		../../../../Qt/5.15.2/gcc_64/bin/moc
-	/home/bing/Qt/5.15.2/gcc_64/bin/moc $(DEFINES) --include /home/bing/code/build/debug/moc/View3D/moc_predefs.h -I/home/bing/Qt/5.15.2/gcc_64/mkspecs/linux-g++ -I/home/bing/code/view3d/src/ViewLib -I/home/bing/code/view3d/src/ViewLib -I/home/bing/code/view3d/src -I/home/bing/code/view3d/thirdpart -I/home/bing/Qt/5.15.2/gcc_64/include -I/home/bing/Qt/5.15.2/gcc_64/include/QtOpenGL -I/home/bing/Qt/5.15.2/gcc_64/include/QtWidgets -I/home/bing/Qt/5.15.2/gcc_64/include/QtGui -I/home/bing/Qt/5.15.2/gcc_64/include/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include Camera.h -o ../../../build/debug/moc/View3D/moc_Camera.cpp
+	/home/bing/Qt/5.15.2/gcc_64/bin/moc $(DEFINES) --include /home/bing/code/view3d/build/debug/moc/View3D/moc_predefs.h -I/home/bing/Qt/5.15.2/gcc_64/mkspecs/linux-g++ -I/home/bing/code/view3d/src/ViewLib -I/home/bing/code/view3d/src/ViewLib -I/home/bing/code/view3d/src -I/home/bing/code/view3d/thirdpart -I/home/bing/code/view3d/thirdpart/emesh/src -I/home/bing/Qt/5.15.2/gcc_64/include -I/home/bing/Qt/5.15.2/gcc_64/include/QtOpenGL -I/home/bing/Qt/5.15.2/gcc_64/include/QtWidgets -I/home/bing/Qt/5.15.2/gcc_64/include/QtGui -I/home/bing/Qt/5.15.2/gcc_64/include/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include Camera.h -o ../../build/debug/moc/View3D/moc_Camera.cpp
 
-../../../build/debug/moc/View3D/moc_Frame.cpp: Frame.h \
+../../build/debug/moc/View3D/moc_Frame.cpp: Frame.h \
 		Config.h \
+		../../thirdpart/generic/common/Macros.hpp \
+		../../thirdpart/generic/common/Version.hpp \
+		../../thirdpart/generic/geometry/Transform.hpp \
+		../../thirdpart/generic/math/Numbers.hpp \
+		../../thirdpart/generic/geometry/Geometries.hpp \
+		../../thirdpart/generic/geometry/Point.hpp \
+		../../thirdpart/generic/math/MathUtility.hpp \
+		../../thirdpart/generic/common/Traits.hpp \
+		../../thirdpart/generic/geometry/Segment.hpp \
+		../../thirdpart/generic/geometry/Triangle.hpp \
+		../../thirdpart/generic/geometry/Common.hpp \
+		../../thirdpart/generic/common/Exception.hpp \
+		../../thirdpart/generic/geometry/Box.hpp \
+		../../thirdpart/generic/geometry/Polygon.hpp \
+		../../thirdpart/generic/geometry/PolygonWithHoles.hpp \
+		../../thirdpart/generic/geometry/Vector.hpp \
 		Action.h \
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/QObject \
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/qobject.h \
@@ -883,12 +905,28 @@ compiler_moc_header_clean:
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/QTimer \
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/qtimer.h \
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/qbasictimer.h \
-		../../../build/debug/moc/View3D/moc_predefs.h \
+		../../build/debug/moc/View3D/moc_predefs.h \
 		../../../../Qt/5.15.2/gcc_64/bin/moc
-	/home/bing/Qt/5.15.2/gcc_64/bin/moc $(DEFINES) --include /home/bing/code/build/debug/moc/View3D/moc_predefs.h -I/home/bing/Qt/5.15.2/gcc_64/mkspecs/linux-g++ -I/home/bing/code/view3d/src/ViewLib -I/home/bing/code/view3d/src/ViewLib -I/home/bing/code/view3d/src -I/home/bing/code/view3d/thirdpart -I/home/bing/Qt/5.15.2/gcc_64/include -I/home/bing/Qt/5.15.2/gcc_64/include/QtOpenGL -I/home/bing/Qt/5.15.2/gcc_64/include/QtWidgets -I/home/bing/Qt/5.15.2/gcc_64/include/QtGui -I/home/bing/Qt/5.15.2/gcc_64/include/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include Frame.h -o ../../../build/debug/moc/View3D/moc_Frame.cpp
+	/home/bing/Qt/5.15.2/gcc_64/bin/moc $(DEFINES) --include /home/bing/code/view3d/build/debug/moc/View3D/moc_predefs.h -I/home/bing/Qt/5.15.2/gcc_64/mkspecs/linux-g++ -I/home/bing/code/view3d/src/ViewLib -I/home/bing/code/view3d/src/ViewLib -I/home/bing/code/view3d/src -I/home/bing/code/view3d/thirdpart -I/home/bing/code/view3d/thirdpart/emesh/src -I/home/bing/Qt/5.15.2/gcc_64/include -I/home/bing/Qt/5.15.2/gcc_64/include/QtOpenGL -I/home/bing/Qt/5.15.2/gcc_64/include/QtWidgets -I/home/bing/Qt/5.15.2/gcc_64/include/QtGui -I/home/bing/Qt/5.15.2/gcc_64/include/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include Frame.h -o ../../build/debug/moc/View3D/moc_Frame.cpp
 
-../../../build/debug/moc/View3D/moc_View3D.cpp: View3D.h \
+../../build/debug/moc/View3D/moc_View3D.cpp: View3D.h \
 		Config.h \
+		../../thirdpart/generic/common/Macros.hpp \
+		../../thirdpart/generic/common/Version.hpp \
+		../../thirdpart/generic/geometry/Transform.hpp \
+		../../thirdpart/generic/math/Numbers.hpp \
+		../../thirdpart/generic/geometry/Geometries.hpp \
+		../../thirdpart/generic/geometry/Point.hpp \
+		../../thirdpart/generic/math/MathUtility.hpp \
+		../../thirdpart/generic/common/Traits.hpp \
+		../../thirdpart/generic/geometry/Segment.hpp \
+		../../thirdpart/generic/geometry/Triangle.hpp \
+		../../thirdpart/generic/geometry/Common.hpp \
+		../../thirdpart/generic/common/Exception.hpp \
+		../../thirdpart/generic/geometry/Box.hpp \
+		../../thirdpart/generic/geometry/Polygon.hpp \
+		../../thirdpart/generic/geometry/PolygonWithHoles.hpp \
+		../../thirdpart/generic/geometry/Vector.hpp \
 		Action.h \
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/QObject \
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/qobject.h \
@@ -1005,9 +1043,9 @@ compiler_moc_header_clean:
 		../../../../Qt/5.15.2/gcc_64/include/QtGui/qopenglext.h \
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/QElapsedTimer \
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/qelapsedtimer.h \
-		../../../build/debug/moc/View3D/moc_predefs.h \
+		../../build/debug/moc/View3D/moc_predefs.h \
 		../../../../Qt/5.15.2/gcc_64/bin/moc
-	/home/bing/Qt/5.15.2/gcc_64/bin/moc $(DEFINES) --include /home/bing/code/build/debug/moc/View3D/moc_predefs.h -I/home/bing/Qt/5.15.2/gcc_64/mkspecs/linux-g++ -I/home/bing/code/view3d/src/ViewLib -I/home/bing/code/view3d/src/ViewLib -I/home/bing/code/view3d/src -I/home/bing/code/view3d/thirdpart -I/home/bing/Qt/5.15.2/gcc_64/include -I/home/bing/Qt/5.15.2/gcc_64/include/QtOpenGL -I/home/bing/Qt/5.15.2/gcc_64/include/QtWidgets -I/home/bing/Qt/5.15.2/gcc_64/include/QtGui -I/home/bing/Qt/5.15.2/gcc_64/include/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include View3D.h -o ../../../build/debug/moc/View3D/moc_View3D.cpp
+	/home/bing/Qt/5.15.2/gcc_64/bin/moc $(DEFINES) --include /home/bing/code/view3d/build/debug/moc/View3D/moc_predefs.h -I/home/bing/Qt/5.15.2/gcc_64/mkspecs/linux-g++ -I/home/bing/code/view3d/src/ViewLib -I/home/bing/code/view3d/src/ViewLib -I/home/bing/code/view3d/src -I/home/bing/code/view3d/thirdpart -I/home/bing/code/view3d/thirdpart/emesh/src -I/home/bing/Qt/5.15.2/gcc_64/include -I/home/bing/Qt/5.15.2/gcc_64/include/QtOpenGL -I/home/bing/Qt/5.15.2/gcc_64/include/QtWidgets -I/home/bing/Qt/5.15.2/gcc_64/include/QtGui -I/home/bing/Qt/5.15.2/gcc_64/include/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include View3D.h -o ../../build/debug/moc/View3D/moc_View3D.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -1021,18 +1059,125 @@ compiler_yacc_impl_make_all:
 compiler_yacc_impl_clean:
 compiler_lex_make_all:
 compiler_lex_clean:
-compiler_clean: compiler_rcc_clean compiler_moc_predefs_clean compiler_moc_header_clean 
+compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean 
 
 ####### Compile
 
-../../../build/debug/obj/View3D/Mesher2D.o: ../../thirdpart/emesh/Mesher2D.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../../../build/debug/obj/View3D/Mesher2D.o ../../thirdpart/emesh/Mesher2D.cpp
+../../build/debug/obj/View3D/Mesher2D.o: ../../thirdpart/emesh/src/Mesher2D.cpp ../../thirdpart/emesh/src/Mesher2D.h \
+		../../thirdpart/generic/geometry/TriangleEvaluator.hpp \
+		../../thirdpart/generic/common/Traits.hpp \
+		../../thirdpart/generic/math/Numbers.hpp \
+		../../thirdpart/generic/geometry/Triangulation.hpp \
+		../../thirdpart/generic/topology/IndexGraph.hpp \
+		../../thirdpart/generic/common/Exception.hpp \
+		../../thirdpart/generic/common/Macros.hpp \
+		../../thirdpart/generic/common/Version.hpp \
+		../../thirdpart/generic/common/Archive.hpp \
+		../../thirdpart/generic/topology/Common.hpp \
+		../../thirdpart/generic/math/MathUtility.hpp \
+		../../thirdpart/generic/geometry/GeometryIO.hpp \
+		../../thirdpart/generic/geometry/BoostGeometryRegister.hpp \
+		../../thirdpart/generic/geometry/Geometries.hpp \
+		../../thirdpart/generic/geometry/Point.hpp \
+		../../thirdpart/generic/geometry/Segment.hpp \
+		../../thirdpart/generic/geometry/Triangle.hpp \
+		../../thirdpart/generic/geometry/Common.hpp \
+		../../thirdpart/generic/geometry/Box.hpp \
+		../../thirdpart/generic/geometry/Polygon.hpp \
+		../../thirdpart/generic/geometry/PolygonWithHoles.hpp \
+		../../thirdpart/generic/geometry/GeometryTraits.hpp \
+		../../thirdpart/generic/geometry/Vector.hpp \
+		../../thirdpart/generic/geometry/Rasterization.hpp \
+		../../thirdpart/generic/geometry/Utility.hpp \
+		../../thirdpart/generic/geometry/BoostPolygonRegister.hpp \
+		../../thirdpart/generic/geometry/Trapezoid.hpp \
+		../../thirdpart/generic/geometry/Sphere.hpp \
+		../../thirdpart/generic/geometry/Plane.hpp \
+		../../thirdpart/generic/geometry/Line.hpp \
+		../../thirdpart/generic/geometry/Utility.ipp \
+		../../thirdpart/generic/geometry/Serialization.hpp \
+		../../thirdpart/generic/geometry/Triangulator.hpp \
+		../../thirdpart/generic/geometry/TriangulationOperator.hpp \
+		../../thirdpart/generic/tools/Log.hpp \
+		../../thirdpart/generic/tools/FileSystem.hpp \
+		../../thirdpart/generic/tools/Tools.hpp \
+		../../thirdpart/generic/tools/Units.hpp \
+		../../thirdpart/generic/tools/Format.hpp \
+		../../thirdpart/emesh/src/MeshCommon.h \
+		../../thirdpart/generic/geometry/TriangulationRefinement.hpp \
+		../../thirdpart/generic/tree/QuadTreeUtilityMT.hpp \
+		../../thirdpart/generic/tree/QuadTree.hpp \
+		../../thirdpart/generic/thread/ThreadPool.hpp \
+		../../thirdpart/generic/geometry/HashFunction.hpp \
+		../../thirdpart/generic/geometry/Transform.hpp \
+		../../thirdpart/generic/geometry/Topology.hpp \
+		../../thirdpart/emesh/src/MeshFileUtility.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../../build/debug/obj/View3D/Mesher2D.o ../../thirdpart/emesh/src/Mesher2D.cpp
 
-../../../build/debug/obj/View3D/MeshFileUtility.o: ../../thirdpart/emesh/MeshFileUtility.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../../../build/debug/obj/View3D/MeshFileUtility.o ../../thirdpart/emesh/MeshFileUtility.cpp
+../../build/debug/obj/View3D/MeshFileUtility.o: ../../thirdpart/emesh/src/MeshFileUtility.cpp ../../thirdpart/emesh/src/MeshFileUtility.h \
+		../../thirdpart/emesh/src/MeshCommon.h \
+		../../thirdpart/generic/geometry/TriangleEvaluator.hpp \
+		../../thirdpart/generic/common/Traits.hpp \
+		../../thirdpart/generic/math/Numbers.hpp \
+		../../thirdpart/generic/geometry/Triangulation.hpp \
+		../../thirdpart/generic/topology/IndexGraph.hpp \
+		../../thirdpart/generic/common/Exception.hpp \
+		../../thirdpart/generic/common/Macros.hpp \
+		../../thirdpart/generic/common/Version.hpp \
+		../../thirdpart/generic/common/Archive.hpp \
+		../../thirdpart/generic/topology/Common.hpp \
+		../../thirdpart/generic/math/MathUtility.hpp \
+		../../thirdpart/generic/geometry/GeometryIO.hpp \
+		../../thirdpart/generic/geometry/BoostGeometryRegister.hpp \
+		../../thirdpart/generic/geometry/Geometries.hpp \
+		../../thirdpart/generic/geometry/Point.hpp \
+		../../thirdpart/generic/geometry/Segment.hpp \
+		../../thirdpart/generic/geometry/Triangle.hpp \
+		../../thirdpart/generic/geometry/Common.hpp \
+		../../thirdpart/generic/geometry/Box.hpp \
+		../../thirdpart/generic/geometry/Polygon.hpp \
+		../../thirdpart/generic/geometry/PolygonWithHoles.hpp \
+		../../thirdpart/generic/geometry/GeometryTraits.hpp \
+		../../thirdpart/generic/geometry/Vector.hpp \
+		../../thirdpart/generic/geometry/Rasterization.hpp \
+		../../thirdpart/generic/geometry/Utility.hpp \
+		../../thirdpart/generic/geometry/BoostPolygonRegister.hpp \
+		../../thirdpart/generic/geometry/Trapezoid.hpp \
+		../../thirdpart/generic/geometry/Sphere.hpp \
+		../../thirdpart/generic/geometry/Plane.hpp \
+		../../thirdpart/generic/geometry/Line.hpp \
+		../../thirdpart/generic/geometry/Utility.ipp \
+		../../thirdpart/generic/geometry/Serialization.hpp \
+		../../thirdpart/generic/geometry/Triangulator.hpp \
+		../../thirdpart/generic/geometry/TriangulationOperator.hpp \
+		../../thirdpart/generic/tools/Log.hpp \
+		../../thirdpart/generic/tools/FileSystem.hpp \
+		../../thirdpart/generic/tools/Tools.hpp \
+		../../thirdpart/generic/tools/Units.hpp \
+		../../thirdpart/generic/tools/Format.hpp \
+		../../thirdpart/emesh/src/Mesher2D.h \
+		../../thirdpart/generic/geometry/Transform.hpp \
+		../../thirdpart/generic/tools/Parser.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../../build/debug/obj/View3D/MeshFileUtility.o ../../thirdpart/emesh/src/MeshFileUtility.cpp
 
-../../../build/debug/obj/View3D/Action.o: Action.cpp Action.h \
+../../build/debug/obj/View3D/Action.o: Action.cpp Action.h \
 		Config.h \
+		../../thirdpart/generic/common/Macros.hpp \
+		../../thirdpart/generic/common/Version.hpp \
+		../../thirdpart/generic/geometry/Transform.hpp \
+		../../thirdpart/generic/math/Numbers.hpp \
+		../../thirdpart/generic/geometry/Geometries.hpp \
+		../../thirdpart/generic/geometry/Point.hpp \
+		../../thirdpart/generic/math/MathUtility.hpp \
+		../../thirdpart/generic/common/Traits.hpp \
+		../../thirdpart/generic/geometry/Segment.hpp \
+		../../thirdpart/generic/geometry/Triangle.hpp \
+		../../thirdpart/generic/geometry/Common.hpp \
+		../../thirdpart/generic/common/Exception.hpp \
+		../../thirdpart/generic/geometry/Box.hpp \
+		../../thirdpart/generic/geometry/Polygon.hpp \
+		../../thirdpart/generic/geometry/PolygonWithHoles.hpp \
+		../../thirdpart/generic/geometry/Vector.hpp \
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/QObject \
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/qobject.h \
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/qobjectdefs.h \
@@ -1099,10 +1244,26 @@ compiler_clean: compiler_rcc_clean compiler_moc_predefs_clean compiler_moc_heade
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/qcontiguouscache.h \
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/qsharedpointer.h \
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/qsharedpointer_impl.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../../../build/debug/obj/View3D/Action.o Action.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../../build/debug/obj/View3D/Action.o Action.cpp
 
-../../../build/debug/obj/View3D/Camera.o: Camera.cpp Camera.h \
+../../build/debug/obj/View3D/Camera.o: Camera.cpp Camera.h \
 		Config.h \
+		../../thirdpart/generic/common/Macros.hpp \
+		../../thirdpart/generic/common/Version.hpp \
+		../../thirdpart/generic/geometry/Transform.hpp \
+		../../thirdpart/generic/math/Numbers.hpp \
+		../../thirdpart/generic/geometry/Geometries.hpp \
+		../../thirdpart/generic/geometry/Point.hpp \
+		../../thirdpart/generic/math/MathUtility.hpp \
+		../../thirdpart/generic/common/Traits.hpp \
+		../../thirdpart/generic/geometry/Segment.hpp \
+		../../thirdpart/generic/geometry/Triangle.hpp \
+		../../thirdpart/generic/geometry/Common.hpp \
+		../../thirdpart/generic/common/Exception.hpp \
+		../../thirdpart/generic/geometry/Box.hpp \
+		../../thirdpart/generic/geometry/Polygon.hpp \
+		../../thirdpart/generic/geometry/PolygonWithHoles.hpp \
+		../../thirdpart/generic/geometry/Vector.hpp \
 		Frame.h \
 		Action.h \
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/QObject \
@@ -1224,10 +1385,26 @@ compiler_clean: compiler_rcc_clean compiler_moc_predefs_clean compiler_moc_heade
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/qt_windows.h \
 		../../../../Qt/5.15.2/gcc_64/include/QtGui/qopengles2ext.h \
 		../../../../Qt/5.15.2/gcc_64/include/QtGui/qopenglext.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../../../build/debug/obj/View3D/Camera.o Camera.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../../build/debug/obj/View3D/Camera.o Camera.cpp
 
-../../../build/debug/obj/View3D/Frame.o: Frame.cpp Frame.h \
+../../build/debug/obj/View3D/Frame.o: Frame.cpp Frame.h \
 		Config.h \
+		../../thirdpart/generic/common/Macros.hpp \
+		../../thirdpart/generic/common/Version.hpp \
+		../../thirdpart/generic/geometry/Transform.hpp \
+		../../thirdpart/generic/math/Numbers.hpp \
+		../../thirdpart/generic/geometry/Geometries.hpp \
+		../../thirdpart/generic/geometry/Point.hpp \
+		../../thirdpart/generic/math/MathUtility.hpp \
+		../../thirdpart/generic/common/Traits.hpp \
+		../../thirdpart/generic/geometry/Segment.hpp \
+		../../thirdpart/generic/geometry/Triangle.hpp \
+		../../thirdpart/generic/geometry/Common.hpp \
+		../../thirdpart/generic/common/Exception.hpp \
+		../../thirdpart/generic/geometry/Box.hpp \
+		../../thirdpart/generic/geometry/Polygon.hpp \
+		../../thirdpart/generic/geometry/PolygonWithHoles.hpp \
+		../../thirdpart/generic/geometry/Vector.hpp \
 		Action.h \
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/QObject \
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/qobject.h \
@@ -1321,16 +1498,70 @@ compiler_clean: compiler_rcc_clean compiler_moc_predefs_clean compiler_moc_heade
 		../../../../Qt/5.15.2/gcc_64/include/QtGui/qvector2d.h \
 		../../../../Qt/5.15.2/gcc_64/include/QtGui/qtouchdevice.h \
 		../../../../Qt/5.15.2/gcc_64/include/QtGui/QWheelEvent
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../../../build/debug/obj/View3D/Frame.o Frame.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../../build/debug/obj/View3D/Frame.o Frame.cpp
 
-../../../build/debug/obj/View3D/Model.o: Model.cpp Model.h \
+../../build/debug/obj/View3D/Model.o: Model.cpp Model.h \
 		Config.h \
-		Color.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../../../build/debug/obj/View3D/Model.o Model.cpp
+		../../thirdpart/generic/common/Macros.hpp \
+		../../thirdpart/generic/common/Version.hpp \
+		../../thirdpart/generic/geometry/Transform.hpp \
+		../../thirdpart/generic/math/Numbers.hpp \
+		../../thirdpart/generic/geometry/Geometries.hpp \
+		../../thirdpart/generic/geometry/Point.hpp \
+		../../thirdpart/generic/math/MathUtility.hpp \
+		../../thirdpart/generic/common/Traits.hpp \
+		../../thirdpart/generic/geometry/Segment.hpp \
+		../../thirdpart/generic/geometry/Triangle.hpp \
+		../../thirdpart/generic/geometry/Common.hpp \
+		../../thirdpart/generic/common/Exception.hpp \
+		../../thirdpart/generic/geometry/Box.hpp \
+		../../thirdpart/generic/geometry/Polygon.hpp \
+		../../thirdpart/generic/geometry/PolygonWithHoles.hpp \
+		../../thirdpart/generic/geometry/Vector.hpp \
+		Color.h \
+		../../thirdpart/generic/geometry/TriangulationRefinement.hpp \
+		../../thirdpart/generic/geometry/TriangleEvaluator.hpp \
+		../../thirdpart/generic/geometry/Triangulation.hpp \
+		../../thirdpart/generic/topology/IndexGraph.hpp \
+		../../thirdpart/generic/common/Archive.hpp \
+		../../thirdpart/generic/topology/Common.hpp \
+		../../thirdpart/generic/geometry/GeometryIO.hpp \
+		../../thirdpart/generic/geometry/BoostGeometryRegister.hpp \
+		../../thirdpart/generic/geometry/GeometryTraits.hpp \
+		../../thirdpart/generic/geometry/Rasterization.hpp \
+		../../thirdpart/generic/geometry/Utility.hpp \
+		../../thirdpart/generic/geometry/BoostPolygonRegister.hpp \
+		../../thirdpart/generic/geometry/Trapezoid.hpp \
+		../../thirdpart/generic/geometry/Sphere.hpp \
+		../../thirdpart/generic/geometry/Plane.hpp \
+		../../thirdpart/generic/geometry/Line.hpp \
+		../../thirdpart/generic/geometry/Utility.ipp \
+		../../thirdpart/generic/geometry/Serialization.hpp \
+		../../thirdpart/generic/geometry/Triangulator.hpp \
+		../../thirdpart/generic/geometry/TriangulationOperator.hpp \
+		../../thirdpart/generic/geometry/Tetrahedralization.hpp \
+		../../thirdpart/generic/geometry/Topology.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../../build/debug/obj/View3D/Model.o Model.cpp
 
-../../../build/debug/obj/View3D/ModelView.o: ModelView.cpp ModelView.h \
+../../build/debug/obj/View3D/ModelView.o: ModelView.cpp ModelView.h \
 		View3D.h \
 		Config.h \
+		../../thirdpart/generic/common/Macros.hpp \
+		../../thirdpart/generic/common/Version.hpp \
+		../../thirdpart/generic/geometry/Transform.hpp \
+		../../thirdpart/generic/math/Numbers.hpp \
+		../../thirdpart/generic/geometry/Geometries.hpp \
+		../../thirdpart/generic/geometry/Point.hpp \
+		../../thirdpart/generic/math/MathUtility.hpp \
+		../../thirdpart/generic/common/Traits.hpp \
+		../../thirdpart/generic/geometry/Segment.hpp \
+		../../thirdpart/generic/geometry/Triangle.hpp \
+		../../thirdpart/generic/geometry/Common.hpp \
+		../../thirdpart/generic/common/Exception.hpp \
+		../../thirdpart/generic/geometry/Box.hpp \
+		../../thirdpart/generic/geometry/Polygon.hpp \
+		../../thirdpart/generic/geometry/PolygonWithHoles.hpp \
+		../../thirdpart/generic/geometry/Vector.hpp \
 		Action.h \
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/QObject \
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/qobject.h \
@@ -1449,13 +1680,51 @@ compiler_clean: compiler_rcc_clean compiler_moc_predefs_clean compiler_moc_heade
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/qelapsedtimer.h \
 		Model.h \
 		Color.h \
+		../../thirdpart/generic/geometry/TriangulationRefinement.hpp \
+		../../thirdpart/generic/geometry/TriangleEvaluator.hpp \
+		../../thirdpart/generic/geometry/Triangulation.hpp \
+		../../thirdpart/generic/topology/IndexGraph.hpp \
+		../../thirdpart/generic/common/Archive.hpp \
+		../../thirdpart/generic/topology/Common.hpp \
+		../../thirdpart/generic/geometry/GeometryIO.hpp \
+		../../thirdpart/generic/geometry/BoostGeometryRegister.hpp \
+		../../thirdpart/generic/geometry/GeometryTraits.hpp \
+		../../thirdpart/generic/geometry/Rasterization.hpp \
+		../../thirdpart/generic/geometry/Utility.hpp \
+		../../thirdpart/generic/geometry/BoostPolygonRegister.hpp \
+		../../thirdpart/generic/geometry/Trapezoid.hpp \
+		../../thirdpart/generic/geometry/Sphere.hpp \
+		../../thirdpart/generic/geometry/Plane.hpp \
+		../../thirdpart/generic/geometry/Line.hpp \
+		../../thirdpart/generic/geometry/Utility.ipp \
+		../../thirdpart/generic/geometry/Serialization.hpp \
+		../../thirdpart/generic/geometry/Triangulator.hpp \
+		../../thirdpart/generic/geometry/TriangulationOperator.hpp \
+		../../thirdpart/generic/geometry/Tetrahedralization.hpp \
+		../../thirdpart/generic/geometry/Topology.hpp \
 		Camera.h \
 		Frame.h \
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/QPoint \
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/QTimer \
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/qtimer.h \
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/qbasictimer.h \
+		../../thirdpart/generic/geometry/TetrahedralizationIO.hpp \
+		../../thirdpart/generic/tools/Parser.hpp \
+		../../thirdpart/generic/geometry/Connectivity.hpp \
+		../../thirdpart/generic/thread/ThreadPool.hpp \
+		../../thirdpart/generic/tree/BVHUtilityMT.hpp \
+		../../thirdpart/generic/tree/BuilderMT.hpp \
+		../../thirdpart/generic/tree/Builder.hpp \
+		../../thirdpart/generic/tree/BVH.hpp \
+		../../thirdpart/generic/tools/Tools.hpp \
+		../../thirdpart/generic/tools/Units.hpp \
 		Painter.h \
+		../../thirdpart/emesh/src/Mesher2D.h \
+		../../thirdpart/generic/tools/Log.hpp \
+		../../thirdpart/generic/tools/FileSystem.hpp \
+		../../thirdpart/generic/tools/Format.hpp \
+		../../thirdpart/emesh/src/MeshCommon.h \
+		../../thirdpart/emesh/src/MeshFileUtility.h \
 		../../../../Qt/5.15.2/gcc_64/include/QtWidgets/QApplication \
 		../../../../Qt/5.15.2/gcc_64/include/QtWidgets/qapplication.h \
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/qcoreapplication.h \
@@ -1468,12 +1737,50 @@ compiler_clean: compiler_rcc_clean compiler_moc_predefs_clean compiler_moc_heade
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/qfileinfo.h \
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/QString \
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/QDebug
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../../../build/debug/obj/View3D/ModelView.o ModelView.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../../build/debug/obj/View3D/ModelView.o ModelView.cpp
 
-../../../build/debug/obj/View3D/Painter.o: Painter.cpp Painter.h \
+../../build/debug/obj/View3D/Painter.o: Painter.cpp Painter.h \
 		Config.h \
+		../../thirdpart/generic/common/Macros.hpp \
+		../../thirdpart/generic/common/Version.hpp \
+		../../thirdpart/generic/geometry/Transform.hpp \
+		../../thirdpart/generic/math/Numbers.hpp \
+		../../thirdpart/generic/geometry/Geometries.hpp \
+		../../thirdpart/generic/geometry/Point.hpp \
+		../../thirdpart/generic/math/MathUtility.hpp \
+		../../thirdpart/generic/common/Traits.hpp \
+		../../thirdpart/generic/geometry/Segment.hpp \
+		../../thirdpart/generic/geometry/Triangle.hpp \
+		../../thirdpart/generic/geometry/Common.hpp \
+		../../thirdpart/generic/common/Exception.hpp \
+		../../thirdpart/generic/geometry/Box.hpp \
+		../../thirdpart/generic/geometry/Polygon.hpp \
+		../../thirdpart/generic/geometry/PolygonWithHoles.hpp \
+		../../thirdpart/generic/geometry/Vector.hpp \
 		Model.h \
 		Color.h \
+		../../thirdpart/generic/geometry/TriangulationRefinement.hpp \
+		../../thirdpart/generic/geometry/TriangleEvaluator.hpp \
+		../../thirdpart/generic/geometry/Triangulation.hpp \
+		../../thirdpart/generic/topology/IndexGraph.hpp \
+		../../thirdpart/generic/common/Archive.hpp \
+		../../thirdpart/generic/topology/Common.hpp \
+		../../thirdpart/generic/geometry/GeometryIO.hpp \
+		../../thirdpart/generic/geometry/BoostGeometryRegister.hpp \
+		../../thirdpart/generic/geometry/GeometryTraits.hpp \
+		../../thirdpart/generic/geometry/Rasterization.hpp \
+		../../thirdpart/generic/geometry/Utility.hpp \
+		../../thirdpart/generic/geometry/BoostPolygonRegister.hpp \
+		../../thirdpart/generic/geometry/Trapezoid.hpp \
+		../../thirdpart/generic/geometry/Sphere.hpp \
+		../../thirdpart/generic/geometry/Plane.hpp \
+		../../thirdpart/generic/geometry/Line.hpp \
+		../../thirdpart/generic/geometry/Utility.ipp \
+		../../thirdpart/generic/geometry/Serialization.hpp \
+		../../thirdpart/generic/geometry/Triangulator.hpp \
+		../../thirdpart/generic/geometry/TriangulationOperator.hpp \
+		../../thirdpart/generic/geometry/Tetrahedralization.hpp \
+		../../thirdpart/generic/geometry/Topology.hpp \
 		../../../../Qt/5.15.2/gcc_64/include/QtWidgets/QOpenGLWidget \
 		../../../../Qt/5.15.2/gcc_64/include/QtWidgets/qopenglwidget.h \
 		../../../../Qt/5.15.2/gcc_64/include/QtWidgets/qtwidgetsglobal.h \
@@ -1595,10 +1902,26 @@ compiler_clean: compiler_rcc_clean compiler_moc_predefs_clean compiler_moc_heade
 		../../../../Qt/5.15.2/gcc_64/include/QtGui/qpainter.h \
 		../../../../Qt/5.15.2/gcc_64/include/QtGui/qtextoption.h \
 		../../../../Qt/5.15.2/gcc_64/include/QtGui/qpen.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../../../build/debug/obj/View3D/Painter.o Painter.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../../build/debug/obj/View3D/Painter.o Painter.cpp
 
-../../../build/debug/obj/View3D/View3D.o: View3D.cpp View3D.h \
+../../build/debug/obj/View3D/View3D.o: View3D.cpp View3D.h \
 		Config.h \
+		../../thirdpart/generic/common/Macros.hpp \
+		../../thirdpart/generic/common/Version.hpp \
+		../../thirdpart/generic/geometry/Transform.hpp \
+		../../thirdpart/generic/math/Numbers.hpp \
+		../../thirdpart/generic/geometry/Geometries.hpp \
+		../../thirdpart/generic/geometry/Point.hpp \
+		../../thirdpart/generic/math/MathUtility.hpp \
+		../../thirdpart/generic/common/Traits.hpp \
+		../../thirdpart/generic/geometry/Segment.hpp \
+		../../thirdpart/generic/geometry/Triangle.hpp \
+		../../thirdpart/generic/geometry/Common.hpp \
+		../../thirdpart/generic/common/Exception.hpp \
+		../../thirdpart/generic/geometry/Box.hpp \
+		../../thirdpart/generic/geometry/Polygon.hpp \
+		../../thirdpart/generic/geometry/PolygonWithHoles.hpp \
+		../../thirdpart/generic/geometry/Vector.hpp \
 		Action.h \
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/QObject \
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/qobject.h \
@@ -1718,6 +2041,28 @@ compiler_clean: compiler_rcc_clean compiler_moc_predefs_clean compiler_moc_heade
 		Painter.h \
 		Model.h \
 		Color.h \
+		../../thirdpart/generic/geometry/TriangulationRefinement.hpp \
+		../../thirdpart/generic/geometry/TriangleEvaluator.hpp \
+		../../thirdpart/generic/geometry/Triangulation.hpp \
+		../../thirdpart/generic/topology/IndexGraph.hpp \
+		../../thirdpart/generic/common/Archive.hpp \
+		../../thirdpart/generic/topology/Common.hpp \
+		../../thirdpart/generic/geometry/GeometryIO.hpp \
+		../../thirdpart/generic/geometry/BoostGeometryRegister.hpp \
+		../../thirdpart/generic/geometry/GeometryTraits.hpp \
+		../../thirdpart/generic/geometry/Rasterization.hpp \
+		../../thirdpart/generic/geometry/Utility.hpp \
+		../../thirdpart/generic/geometry/BoostPolygonRegister.hpp \
+		../../thirdpart/generic/geometry/Trapezoid.hpp \
+		../../thirdpart/generic/geometry/Sphere.hpp \
+		../../thirdpart/generic/geometry/Plane.hpp \
+		../../thirdpart/generic/geometry/Line.hpp \
+		../../thirdpart/generic/geometry/Utility.ipp \
+		../../thirdpart/generic/geometry/Serialization.hpp \
+		../../thirdpart/generic/geometry/Triangulator.hpp \
+		../../thirdpart/generic/geometry/TriangulationOperator.hpp \
+		../../thirdpart/generic/geometry/Tetrahedralization.hpp \
+		../../thirdpart/generic/geometry/Topology.hpp \
 		Camera.h \
 		Frame.h \
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/QPoint \
@@ -1733,19 +2078,16 @@ compiler_clean: compiler_rcc_clean compiler_moc_predefs_clean compiler_moc_heade
 		../../../../Qt/5.15.2/gcc_64/include/QtGui/qinputmethod.h \
 		../../../../Qt/5.15.2/gcc_64/include/QtGui/QMouseEvent \
 		../../../../Qt/5.15.2/gcc_64/include/QtCore/QString
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../../../build/debug/obj/View3D/View3D.o View3D.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../../build/debug/obj/View3D/View3D.o View3D.cpp
 
-../../../build/debug/obj/View3D/qrc_res.o: ../../../build/debug/rcc/View3D/qrc_res.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../../../build/debug/obj/View3D/qrc_res.o ../../../build/debug/rcc/View3D/qrc_res.cpp
+../../build/debug/obj/View3D/moc_Camera.o: ../../build/debug/moc/View3D/moc_Camera.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../../build/debug/obj/View3D/moc_Camera.o ../../build/debug/moc/View3D/moc_Camera.cpp
 
-../../../build/debug/obj/View3D/moc_Camera.o: ../../../build/debug/moc/View3D/moc_Camera.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../../../build/debug/obj/View3D/moc_Camera.o ../../../build/debug/moc/View3D/moc_Camera.cpp
+../../build/debug/obj/View3D/moc_Frame.o: ../../build/debug/moc/View3D/moc_Frame.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../../build/debug/obj/View3D/moc_Frame.o ../../build/debug/moc/View3D/moc_Frame.cpp
 
-../../../build/debug/obj/View3D/moc_Frame.o: ../../../build/debug/moc/View3D/moc_Frame.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../../../build/debug/obj/View3D/moc_Frame.o ../../../build/debug/moc/View3D/moc_Frame.cpp
-
-../../../build/debug/obj/View3D/moc_View3D.o: ../../../build/debug/moc/View3D/moc_View3D.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../../../build/debug/obj/View3D/moc_View3D.o ../../../build/debug/moc/View3D/moc_View3D.cpp
+../../build/debug/obj/View3D/moc_View3D.o: ../../build/debug/moc/View3D/moc_View3D.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../../build/debug/obj/View3D/moc_View3D.o ../../build/debug/moc/View3D/moc_View3D.cpp
 
 ####### Install
 
