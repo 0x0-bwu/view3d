@@ -1,0 +1,6 @@
+[submodule "thirdpart/generic"]
+	path = thirdpart/generic
+	url = git@github.com:Draaaaaaven/generic.git
+[submodule "thirdpart/emesh"]
+	path = thirdpart/emesh
+	url = git@github.com:Draaaaaaven/emesh.git
