@@ -8,9 +8,9 @@ int main(int argc, char *argv[])
 
     using namespace view;
 
-    TetrahedronModelView viewer;
-    
-    viewer.setWindowTitle("tetrahedron");
+    SurfaceModelView viewer;
+
+    viewer.setWindowTitle("surface model");
     viewer.show();
 
     return a.exec();

@@ -42,14 +42,6 @@ void ModelView::mouseMoveEvent(QMouseEvent * e)
 void ModelView::mousePressEvent(QMouseEvent *e)
 {
     View3D::mousePressEvent(e);
-    // if(m_model){
-    //     bool bFind;
-    //     point3d_t pos = GetCamera()->PointUnderPixel(m_currPos, bFind);
-    //     if(bFind){
-    //         pos = m_model->invTansform() * pos;
-    //         std::cout << pos << std::endl;
-    //     }
-    // }
 }
 
 FrameModelView::FrameModelView(QWidget * parent, Qt::WindowFlags flags)
