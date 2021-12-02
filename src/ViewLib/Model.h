@@ -388,7 +388,7 @@ inline std::unique_ptr<Model> makeFrameModel3DFromPolygonWithHoles2D(iterator be
         const polygon_with_holes2d & pwh = *iter_pwh;
         model->AddPolygonWithHoles3D(pwh, zRef, height, color::white);
     }
-//    model->Normalize();//wbtest
+    model->Normalize();
     return std::unique_ptr<FrameModel3D>(model);
 }
 

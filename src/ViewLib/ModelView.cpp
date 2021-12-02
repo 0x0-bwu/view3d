@@ -47,10 +47,10 @@ void ModelView::mousePressEvent(QMouseEvent *e)
 FrameModelView::FrameModelView(QWidget * parent, Qt::WindowFlags flags)
  : ModelView(parent, flags)
 {
-    InitFromWktFile();
-    // InitFromPolyFile();
-    // InitFromDomDmcFile();
-    // InitFromConnectivityTest();
+//    InitFromWktFile();
+//     InitFromPolyFile();
+//     InitFromDomDmcFile();
+     InitFromConnectivityTest();
 }
 
 FrameModelView::~FrameModelView()
@@ -61,7 +61,7 @@ FrameModelView::~FrameModelView()
 void FrameModelView::InitFromWktFile()
 {
     using namespace generic::geometry;
-    QString fileName = QApplication::applicationDirPath() + "/../../../test/wkt/layer_1.wkt";
+    QString fileName = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/wkt/fccsp/fccsp_1.wkt";
     fileName = QFileInfo(fileName).canonicalFilePath();
     std::vector<PolygonWithHoles2D<coor_t> > outs;
     if(GeometryIO::Read<PolygonWithHoles2D<coor_t> >(fileName.toStdString(), std::back_inserter(outs))){
@@ -78,14 +78,6 @@ void FrameModelView::InitFromWktFile()
             out = trans * out;
         }
         m_model = makeFrameModel3DFromPolygonWithHoles2D<PolygonWithHoles2D<coor_t> >(outs.begin(), outs.end(), coor_t(0), coor_t(0.25 * 1e3));
-
-        auto model3d = dynamic_cast<FrameModel3D *>(m_model.get());
-        if(model3d){
-            QString outFile = QApplication::applicationDirPath() + "/../../../test/tet/layer_1";
-            auto plc = model3d->toPLC(true);
-            tet::WritePlcToNodeAndEdgeFiles(outFile.toStdString(), plc);
-            model3d->Normalize();//wbtest
-        }
     }
 }
 
@@ -93,7 +85,7 @@ void FrameModelView::InitFromPolyFile()
 {
     using namespace geometry;
     using namespace geometry::tet;
-    QString fileName = QApplication::applicationDirPath() + "/../../../test/tet/test.poly";
+    QString fileName = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/poly/test.poly";
     fileName = QFileInfo(fileName).canonicalFilePath();
 
     PiecewiseLinearComplex<Point3D<double> > plc;
@@ -109,7 +101,7 @@ void FrameModelView::InitFromConnectivityTest()
     size_t layers = 39;
     size_t geometries = 0;
     std::vector<std::vector<PolygonWithHoles2D<int64_t> > > layerPwhs(layers);
-    QString baseName = QApplication::applicationDirPath() + "/../../../test/wkt/odb_";
+    QString baseName = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/wkt/odb/odb_";
     for(size_t i = 0; i < layers; ++i){
         std::string filename = baseName.toStdString() + std::to_string(i + 1) + ".wkt";
         GeometryIO::Read<PolygonWithHoles2D<int64_t> >(filename, std::back_inserter(layerPwhs[i]));
@@ -198,7 +190,7 @@ void FrameModelView::InitFromDomDmcFile()
 {
     using namespace emesh;
     using namespace geometry;
-    QString fileName = QApplication::applicationDirPath() + "/../../../test/mesh/2";
+    QString fileName = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/dmcdom/2";
     fileName = QFileInfo(fileName).absoluteFilePath();
 
     std::list<Polygon2D<int64_t> > polygons;
@@ -221,7 +213,7 @@ void SurfaceModelView::InitFromNodeEdgeFiles()
 {
     using namespace emesh;
     using namespace geometry;
-    QString dirPath = QApplication::applicationDirPath() + "/../../../test/tet/";
+    QString dirPath = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/poly/";
     QString nodeFile = dirPath + "fccsp.node";
     nodeFile = QFileInfo(nodeFile).canonicalFilePath();
     QString edgeFile = dirPath + "fccsp.edge";
@@ -241,9 +233,9 @@ void SurfaceModelView::InitFromNodeEle4Files()
 {
     using namespace emesh;
     using namespace geometry;
-    QString dirPath = QApplication::applicationDirPath() + "/../../../test/tet/results/";
-    QString nodeFile = dirPath + "result.node";
-    QString eleFile = dirPath + "result.ele";
+    QString dirPath = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/elenode/";
+    QString nodeFile = dirPath + "fccsp.node";
+    QString eleFile = dirPath + "fccsp.ele";
 
     bool res(true);
     std::vector<tet::IndexEle4> eles;
@@ -284,7 +276,7 @@ SurfaceMeshView::~SurfaceMeshView()
 void SurfaceMeshView::InitFromWktFile()
 {
     using namespace generic::geometry;
-    QString fileName = QApplication::applicationDirPath() + "/../../../test/wkt/layer_1.wkt";
+    QString fileName = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/wkt/fccsp/fccsp_1.wkt";
     fileName = QFileInfo(fileName).canonicalFilePath();
     std::vector<PolygonWithHoles2D<coor_t> > outs;
     if(GeometryIO::Read<PolygonWithHoles2D<coor_t> >(fileName.toStdString(), std::back_inserter(outs))){
@@ -306,7 +298,7 @@ void SurfaceMeshView::InitFromWktFile()
 void SurfaceMeshView::InitFromMshFile()
 {
     using namespace generic::geometry;
-    QString fileName = QApplication::applicationDirPath() + "/../../../test/msh/test.msh";
+    QString fileName = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/msh/test.msh";
     fileName = QFileInfo(fileName).canonicalFilePath();
 
     emesh::MeshFileUtility::ImportMshFile(fileName.toStdString(), *m_triangulation, 1e6);
@@ -323,7 +315,7 @@ void SurfaceMeshView::InitFromDomDmcFile()
     meshCtrl.scale2Int = 100;
     meshCtrl.tolerance = 10;
 
-    QString fileName = QApplication::applicationDirPath() + "/../../../test/mesh/wei";
+    QString fileName = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/dmcdom/1";
     fileName = QFileInfo(fileName).absoluteFilePath();
 
     auto polygons = std::make_unique<std::list<Polygon2D<coor_t> > >();
@@ -365,7 +357,7 @@ void SurfaceMeshView::InitFromTopologyFile()
 {
     using namespace geometry;
     geometry::GeoTopology2D<coor_t> geoTopo;
-    QString topFile = QApplication::applicationDirPath() + "/../../../test/topology/test.top";
+    QString topFile = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/topology/test.top";
     geoTopo.Read(topFile.toStdString());
     PreTriangulation(geoTopo);
     m_refinement.reset(new CurrentRefineMethod(*m_triangulation));
@@ -637,9 +629,9 @@ TetrahedronModelView::~TetrahedronModelView()
 void TetrahedronModelView::InitFromNodeEle4Files()
 {
     using namespace geometry;
-    QString dirPath = QApplication::applicationDirPath() + "/../../../test/tet/";
-    QString nodeFile = dirPath + "fccsp.1.node";
-    QString eleFile = dirPath + "fccsp.1.ele";
+    QString dirPath = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/elenode";
+    QString nodeFile = dirPath + "fccsp.node";
+    QString eleFile = dirPath + "fccsp.ele";
 
     bool res(true);
     std::vector<tet::IndexEle4> eles;
