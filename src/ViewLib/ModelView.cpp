@@ -141,7 +141,7 @@ void FrameModelView::InitFromConnectivityTest()
         m_model = std::unique_ptr<FrameModel3D>(new FrameModel3D);
         std::list<index_t> c;
         std::vector<std::list<index_t> > cc;
-        topology::ConnectedComponent(*graph, 473, c);
+        topology::ConnectedComponent(*graph, 0, c);
         topology::ConnectedComponents(*graph, cc);
         // std::cout << "component:";
         // for(auto i : c) std::cout << " " << i;

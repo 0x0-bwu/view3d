@@ -43,7 +43,6 @@ HEADERS += \
     Model.h \
     ModelView.h \
     Painter.h \
-    ShaderView.h \
     View3D.h
 
 SOURCES += \
