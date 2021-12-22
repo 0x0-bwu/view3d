@@ -193,7 +193,7 @@ void FrameModelView::InitFromDomDmcFile()
     QString fileName = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/dmcdom/2";
     fileName = QFileInfo(fileName).absoluteFilePath();
 
-    std::list<Polygon2D<int64_t> > polygons;
+    std::vector<Polygon2D<int64_t> > polygons;
     MeshFlow2D::LoadGeometryFiles(fileName.toStdString(), FileFormat::DomDmc, 100, polygons);
     m_model = makeFrameModelFromPolygon2D<Polygon2D<int64_t> >(polygons.begin(), polygons.end());
 }
@@ -311,14 +311,14 @@ void SurfaceMeshView::InitFromDomDmcFile()
     using namespace emesh;
     using namespace geometry;
     
-    MeshCtrl meshCtrl;
+    Mesh2Ctrl meshCtrl;
     meshCtrl.scale2Int = 100;
     meshCtrl.tolerance = 10;
 
     QString fileName = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/dmcdom/1";
     fileName = QFileInfo(fileName).absoluteFilePath();
 
-    auto polygons = std::make_unique<std::list<Polygon2D<coor_t> > >();
+    auto polygons = std::make_unique<std::vector<Polygon2D<coor_t> > >();
     MeshFlow2D::LoadGeometryFiles(fileName.toStdString(), FileFormat::DomDmc, meshCtrl.scale2Int, *polygons);
     auto outline = ConvexHull(*polygons);
     // polygons->push_back(outline);
