@@ -402,7 +402,7 @@ inline std::unique_ptr<Model> makeFrameModel3DFromPiecewiseLinearComplex(const g
             model->AddVertexList(face.begin(), face.end(), color::white);
         }
         for(const auto & hole : surface.holes){
-            model->AddSphere(hole, 0.2, color::red);
+            //model->AddSphere(hole, 0.2, color::red);
         }
     }
     model->Normalize();

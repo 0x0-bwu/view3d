@@ -40,6 +40,9 @@ public:
     FrameModelView(QWidget * parent = nullptr, Qt::WindowFlags flags = Qt::SubWindow);
     virtual ~FrameModelView();
 
+protected:
+    void ShowAxis();
+
 private:
     void InitFromWktFile();
     void InitFromPolyFile();

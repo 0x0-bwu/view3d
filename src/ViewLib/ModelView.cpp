@@ -48,14 +48,40 @@ FrameModelView::FrameModelView(QWidget * parent, Qt::WindowFlags flags)
  : ModelView(parent, flags)
 {
 //    InitFromWktFile();
-//     InitFromPolyFile();
+     InitFromPolyFile();
 //     InitFromDomDmcFile();
-     InitFromConnectivityTest();
+//     InitFromConnectivityTest();
 }
 
 FrameModelView::~FrameModelView()
 {
 
+}
+
+void FrameModelView::ShowAxis()
+{
+    QFont ft = QApplication::font();
+
+    auto camera = GetCamera();
+    auto width = camera->ScreenWidth();
+    auto height = camera->ScreenHeight();
+    auto trans = m_model->Transform();
+
+    auto inside = [&width, &height](const point3d_t & p)
+    {
+      return 0 < p[0] && p[0] < width && 0 < p[1] && p[1] < height;
+    };
+
+    auto model = dynamic_cast<FrameModel3D*>(m_model.get());
+    if(nullptr == model) return;
+
+    //vertices
+    for(auto iv = 0; iv < model->vertices.size(); ++iv){
+        const auto & p = model->vertices.at(iv);
+        auto p3d = camera->ProjectedCoordinatesOf(p);
+        if(!inside(p3d)) continue;
+        m_painter->DrawText(p3d[0], p3d[1], QString::number(iv + 1), ft, Qt::red);//index start from 1
+    }
 }
 
 void FrameModelView::InitFromWktFile()
