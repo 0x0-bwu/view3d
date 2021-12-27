@@ -393,6 +393,22 @@ inline std::unique_ptr<Model> makeFrameModel3DFromPolygonWithHoles2D(iterator be
 }
 
 template <typename point_t, typename std::enable_if<point_t::dim == 3, bool>::type = true>
+inline std::unique_ptr<Model> makeFrameModel3DFromNodesAndEdges(const std::vector<point_t> & points, const std::list<geometry::tet::IndexEdge> & edges)
+{
+    auto model = new FrameModel3D;
+    model->vertices.reserve(points.size());
+    for(size_t i = 0; i < points.size(); ++i){
+        assert(i == model->AddVertex(points[i].template Cast<coor_t>()));
+    }
+    for(const auto & edge : edges){
+        auto vertices = std::array<size_t, 2>{ edge.v1(), edge.v2() };
+        model->AddVertexList(vertices.begin(), vertices.end(), color::white);
+    }
+    model->Normalize();
+    return std::unique_ptr<FrameModel3D>(model);
+}
+
+template <typename point_t, typename std::enable_if<point_t::dim == 3, bool>::type = true>
 inline std::unique_ptr<Model> makeFrameModel3DFromPiecewiseLinearComplex(const geometry::tet::PiecewiseLinearComplex<point_t> & plc)
 {
     auto model = new FrameModel3D;

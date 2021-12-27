@@ -47,8 +47,8 @@ private:
     void InitFromWktFile();
     void InitFromPolyFile();
     void InitFromDomDmcFile();
+    void InitFromNodeEdgeFile();
     void InitFromConnectivityTest();
-
 };
 
 class SurfaceModelView : public ModelView
@@ -63,6 +63,7 @@ private:
 
 protected:
     virtual void PerformKeyBoardAction(KeyBoardAction ka);
+    virtual void ShowAxis();
     virtual void draw();
 };
 

@@ -46,8 +46,8 @@ HEADERS += \
     View3D.h
 
 SOURCES += \
-    $$ROOT_DIR/thirdpart/emesh/src/Mesher2D.cpp \
-    $$ROOT_DIR/thirdpart/emesh/src/MeshFileUtility.cpp
+    $$ROOT_DIR/thirdpart/emesh/src/MeshFlow2D.cpp \
+    $$ROOT_DIR/thirdpart/emesh/src/MeshIO.cpp
 
 SOURCES += \
     Action.cpp \

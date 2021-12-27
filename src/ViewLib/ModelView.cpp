@@ -5,9 +5,9 @@
 #include "generic/geometry/Connectivity.hpp"
 #include "generic/tree/BVHUtilityMT.hpp"
 #include "generic/tools/Tools.hpp"
+#include "MeshFlow2D.h"
+#include "MeshIO.h"
 #include "Painter.h"
-#include "Mesher2D.h"
-#include "MeshFileUtility.h"
 #include <QApplication>
 #include <QMouseEvent>
 #include <QFileInfo>
@@ -48,8 +48,9 @@ FrameModelView::FrameModelView(QWidget * parent, Qt::WindowFlags flags)
  : ModelView(parent, flags)
 {
 //    InitFromWktFile();
-     InitFromPolyFile();
+//     InitFromPolyFile();
 //     InitFromDomDmcFile();
+    InitFromNodeEdgeFile();
 //     InitFromConnectivityTest();
 }
 
@@ -117,6 +118,22 @@ void FrameModelView::InitFromPolyFile()
     PiecewiseLinearComplex<Point3D<double> > plc;
     if(LoadPlcFromPolyFile(fileName.toStdString(), plc)){
         m_model = makeFrameModel3DFromPiecewiseLinearComplex(plc);
+    }
+}
+
+void FrameModelView::InitFromNodeEdgeFile()
+{
+    using namespace geometry;
+    bool res(true);
+    std::list<tet::IndexEdge> edges;
+    std::vector<Point3D<int64_t> > points;
+
+//    QString fileName = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/edgenode/fccsp.ne";
+    QString fileName = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/edgenode/fccsp.ne";
+    fileName = QFileInfo(fileName).canonicalFilePath();
+    res = emesh::io::ImportNodeAndEdges(fileName.toStdString(), points, edges);
+    if(res){
+        m_model = makeFrameModel3DFromNodesAndEdges(points, edges);
     }
 }
 
@@ -220,7 +237,7 @@ void FrameModelView::InitFromDomDmcFile()
     fileName = QFileInfo(fileName).absoluteFilePath();
 
     std::vector<Polygon2D<int64_t> > polygons;
-    MeshFlow2D::LoadGeometryFiles(fileName.toStdString(), FileFormat::DomDmc, 100, polygons);
+    MeshFlow2D::LoadGeometryFiles(fileName.toStdString(), FileFormat::DomDmc, polygons);
     m_model = makeFrameModelFromPolygon2D<Polygon2D<int64_t> >(polygons.begin(), polygons.end());
 }
 
@@ -278,6 +295,32 @@ void SurfaceModelView::PerformKeyBoardAction(KeyBoardAction ka)
     ModelView::PerformKeyBoardAction(ka);
 }
 
+void SurfaceModelView::ShowAxis()
+{
+    QFont ft = QApplication::font();
+
+    auto camera = GetCamera();
+    auto width = camera->ScreenWidth();
+    auto height = camera->ScreenHeight();
+    auto trans = m_model->Transform();
+
+    auto inside = [&width, &height](const point3d_t & p)
+    {
+      return 0 < p[0] && p[0] < width && 0 < p[1] && p[1] < height;
+    };
+
+    auto model = dynamic_cast<SurfaceModel3D*>(m_model.get());
+    if(nullptr == model) return;
+
+    //vertices
+    for(auto iv = 0; iv < model->vertices.size(); ++iv){
+        const auto & p = model->vertices.at(iv);
+        auto p3d = camera->ProjectedCoordinatesOf(p);
+        if(!inside(p3d)) continue;
+        m_painter->DrawText(p3d[0], p3d[1], QString::number(iv + 1), ft, Qt::red);//index start from 1
+    }
+}
+
 void SurfaceModelView::draw()
 {
     ModelView::draw();
@@ -327,7 +370,7 @@ void SurfaceMeshView::InitFromMshFile()
     QString fileName = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/msh/test.msh";
     fileName = QFileInfo(fileName).canonicalFilePath();
 
-    emesh::MeshFileUtility::ImportMshFile(fileName.toStdString(), *m_triangulation, 1e6);
+    emesh::io::ImportMshFile(fileName.toStdString(), *m_triangulation);
     m_refinement.reset(new CurrentRefineMethod(*m_triangulation));
     m_refinement->SetParas(math::Rad(20), 25, 1e10);    
 }
@@ -338,14 +381,13 @@ void SurfaceMeshView::InitFromDomDmcFile()
     using namespace geometry;
     
     Mesh2Ctrl meshCtrl;
-    meshCtrl.scale2Int = 100;
     meshCtrl.tolerance = 10;
 
     QString fileName = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/dmcdom/1";
     fileName = QFileInfo(fileName).absoluteFilePath();
 
     auto polygons = std::make_unique<std::vector<Polygon2D<coor_t> > >();
-    MeshFlow2D::LoadGeometryFiles(fileName.toStdString(), FileFormat::DomDmc, meshCtrl.scale2Int, *polygons);
+    MeshFlow2D::LoadGeometryFiles(fileName.toStdString(), FileFormat::DomDmc, *polygons);
     auto outline = ConvexHull(*polygons);
     // polygons->push_back(outline);
 
