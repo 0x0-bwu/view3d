@@ -10,7 +10,7 @@ template <typename coor_t> class BVH;
 } }
 namespace geometry{
 namespace tri {
-template <typename point_t> class TriangleEvaluator;
+template <typename point_t, size_t bins> class TriangleEvaluator;
 } } }
 
 namespace view {
@@ -78,8 +78,10 @@ class SurfaceMeshView : public SurfaceModelView
 //    using CurrentRefineMethod = geometry::tri::RuppertRefinement2D<coor_t>;
 //    using CurrentRefineMethod = geometry::tri::ChewSecondRefinement2D<coor_t>;
     using CurrentRefineMethod = geometry::tri::JonathanRefinement2D<coor_t>;
-    using TriangleEvaluator = geometry::tri::TriangleEvaluator<Point2D<coor_t> >;
-    using TriangleEvaluation = geometry::tri::TriangleEvaluation<TriangleEvaluator::bins>;
+
+    inline static constexpr size_t bins = 10;
+    using TriangleEvaluator = geometry::tri::TriangleEvaluator<Point2D<coor_t>, bins>;
+    using TriangleEvaluation = geometry::tri::TriangleEvaluation<bins>;
     using TriangulationUtility = geometry::tri::TriangulationUtility<Point2D<coor_t> >;
 
 public:
@@ -93,6 +95,7 @@ protected:
     void draw();
 
 private:
+    void InitFromMFile();
     void InitFromWktFile();
     void InitFromMshFile();
     void InitFromDomDmcFile();

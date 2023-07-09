@@ -47,10 +47,10 @@ void ModelView::mousePressEvent(QMouseEvent *e)
 FrameModelView::FrameModelView(QWidget * parent, Qt::WindowFlags flags)
  : ModelView(parent, flags)
 {
-//    InitFromWktFile();
+    InitFromWktFile();
 //     InitFromPolyFile();
 //     InitFromDomDmcFile();
-    InitFromNodeEdgeFile();
+//     InitFromNodeEdgeFile();
 //     InitFromConnectivityTest();
 }
 
@@ -91,7 +91,7 @@ void FrameModelView::InitFromWktFile()
     QString fileName = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/wkt/fccsp/fccsp_1.wkt";
     fileName = QFileInfo(fileName).canonicalFilePath();
     std::vector<PolygonWithHoles2D<coor_t> > outs;
-    if(GeometryIO::Read<PolygonWithHoles2D<coor_t> >(fileName.toStdString(), std::back_inserter(outs))){
+    if(GeometryIO::ReadWKT<PolygonWithHoles2D<coor_t> >(fileName.toStdString(), std::back_inserter(outs))){
         auto trans = makeScaleTransform2D<coor_t>(1e-3);
         for(auto & out : outs) {
             Polygon2D<coor_t> simplified;
@@ -147,7 +147,7 @@ void FrameModelView::InitFromConnectivityTest()
     QString baseName = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/wkt/odb/odb_";
     for(size_t i = 0; i < layers; ++i){
         std::string filename = baseName.toStdString() + std::to_string(i + 1) + ".wkt";
-        GeometryIO::Read<PolygonWithHoles2D<int64_t> >(filename, std::back_inserter(layerPwhs[i]));
+        GeometryIO::ReadWKT<PolygonWithHoles2D<int64_t> >(filename, std::back_inserter(layerPwhs[i]));
         std::cout << "read "<< layerPwhs[i].size() << " geometries from " << filename << std::endl;
         geometries += layerPwhs[i].size();
     }
@@ -330,10 +330,11 @@ SurfaceMeshView::SurfaceMeshView(QWidget * parent, Qt::WindowFlags flags)
  : SurfaceModelView(parent, flags)
  , m_triangulation(new Triangulation)
 {
-    //InitFromWktFile();
-    InitFromMshFile();
-    //InitFromDomDmcFile();
-    //InitFromTopologyFile();
+//    InitFromMFile();
+    InitFromWktFile();
+//    InitFromMshFile();
+//    InitFromDomDmcFile();
+//    InitFromTopologyFile();
     //InitFromTriangulationArchive(true);
     UpdateModels();
 }
@@ -342,13 +343,25 @@ SurfaceMeshView::~SurfaceMeshView()
 {
 }
 
+void SurfaceMeshView::InitFromMFile()
+{
+    using namespace generic::geometry;
+//    QString fileName = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/msh/ex32.msh";
+//    fileName = QFileInfo(fileName).canonicalFilePath();
+    QString fileName = "/home/bing/test/ex32.m";
+
+    emesh::MeshFileUtility::ImportMFile(fileName.toStdString(), *m_triangulation, 1e6);
+    m_refinement.reset(new CurrentRefineMethod(*m_triangulation));
+    m_refinement->SetParas(math::Rad(20), 25, 1e10);
+}
+
 void SurfaceMeshView::InitFromWktFile()
 {
     using namespace generic::geometry;
     QString fileName = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/wkt/fccsp/fccsp_1.wkt";
     fileName = QFileInfo(fileName).canonicalFilePath();
     std::vector<PolygonWithHoles2D<coor_t> > outs;
-    if(GeometryIO::Read<PolygonWithHoles2D<coor_t> >(fileName.toStdString(), std::back_inserter(outs))){
+    if(GeometryIO::ReadWKT<PolygonWithHoles2D<coor_t> >(fileName.toStdString(), std::back_inserter(outs))){
 
         geometry::GeoTopology2D<coor_t> geoTopo;
         for(auto iter_pwh = outs.begin(); iter_pwh != outs.end(); ++iter_pwh){
@@ -367,8 +380,9 @@ void SurfaceMeshView::InitFromWktFile()
 void SurfaceMeshView::InitFromMshFile()
 {
     using namespace generic::geometry;
-    QString fileName = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/msh/test.msh";
-    fileName = QFileInfo(fileName).canonicalFilePath();
+//    QString fileName = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/msh/ex32.msh";
+//    fileName = QFileInfo(fileName).canonicalFilePath();
+    QString fileName = "/home/bing/code/emesh/thirdpart/internal/testdata/msh/test.msh";
 
     emesh::io::ImportMshFile(fileName.toStdString(), *m_triangulation);
     m_refinement.reset(new CurrentRefineMethod(*m_triangulation));
