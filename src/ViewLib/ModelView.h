@@ -10,7 +10,7 @@ template <typename coor_t> class BVH;
 } }
 namespace geometry{
 namespace tri {
-template <typename point_t, size_t bins> class TriangleEvaluator;
+template <typename, size_t> class TriangleEvaluator;
 } } }
 
 namespace view {
@@ -47,7 +47,6 @@ private:
     void InitFromWktFile();
     void InitFromPolyFile();
     void InitFromDomDmcFile();
-    void InitFromNodeEdgeFile();
     void InitFromConnectivityTest();
 };
 

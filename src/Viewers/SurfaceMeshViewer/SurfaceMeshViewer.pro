@@ -8,7 +8,10 @@ include(../../View3D.pri)
 
 INCLUDEPATH = ./ \
               ../../ViewLib \
-              $$GENERIC_LIB_PATH
+              $$BOOST_PATH \
+              $$GENERIC_LIB_PATH \
+              $$EIGEN_LIBRARY_PATH \
+              $$BOOST_INCLUDE_PATH \
 
 LIBS += -L$$BUILD_LIB_PATH -lView3D
 

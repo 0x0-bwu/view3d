@@ -11,7 +11,10 @@ include(../View3D.pri)
 
 INCLUDEPATH = ./ \
               ../ \
+              /usr/include \
               $$GENERIC_LIB_PATH \
+              $$EIGEN_LIBRARY_PATH \
+              $$BOOST_INCLUDE_PATH \
               $$ROOT_DIR/thirdpart/emesh/src \
 
 win32:{
@@ -29,7 +32,7 @@ LIBS += -L"/usr/lib/x86_64-linux-gnu/" \
         -lGLU \
         -lGLEW \
 
-BOOST_LIBRARY = "/usr/local/lib/"
+BOOST_LIBRARY = "/home/bwu/code/3rdparty/boost_1_82_0/lib"
 LIBS += -L$$BOOST_LIBRARY \
         -lboost_serialization \
 }
@@ -46,7 +49,8 @@ HEADERS += \
     View3D.h
 
 SOURCES += \
-    $$ROOT_DIR/thirdpart/emesh/src/MeshFlow2D.cpp \
+    $$ROOT_DIR/thirdpart/emesh/src/MeshFileUtility.cpp \
+    $$ROOT_DIR/thirdpart/emesh/src/Mesher2D.cpp \
     $$ROOT_DIR/thirdpart/emesh/src/MeshIO.cpp
 
 SOURCES += \

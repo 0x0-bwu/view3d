@@ -5,7 +5,8 @@
 #include "generic/geometry/Connectivity.hpp"
 #include "generic/tree/BVHUtilityMT.hpp"
 #include "generic/tools/Tools.hpp"
-#include "MeshFlow2D.h"
+#include "MeshFileUtility.h"
+#include "Mesher2D.h"
 #include "MeshIO.h"
 #include "Painter.h"
 #include <QApplication>
@@ -50,7 +51,6 @@ FrameModelView::FrameModelView(QWidget * parent, Qt::WindowFlags flags)
     InitFromWktFile();
 //     InitFromPolyFile();
 //     InitFromDomDmcFile();
-//     InitFromNodeEdgeFile();
 //     InitFromConnectivityTest();
 }
 
@@ -118,22 +118,6 @@ void FrameModelView::InitFromPolyFile()
     PiecewiseLinearComplex<Point3D<double> > plc;
     if(LoadPlcFromPolyFile(fileName.toStdString(), plc)){
         m_model = makeFrameModel3DFromPiecewiseLinearComplex(plc);
-    }
-}
-
-void FrameModelView::InitFromNodeEdgeFile()
-{
-    using namespace geometry;
-    bool res(true);
-    std::list<tet::IndexEdge> edges;
-    std::vector<Point3D<int64_t> > points;
-
-//    QString fileName = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/edgenode/fccsp.ne";
-    QString fileName = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/edgenode/fccsp.ne";
-    fileName = QFileInfo(fileName).canonicalFilePath();
-    res = emesh::io::ImportNodeAndEdges(fileName.toStdString(), points, edges);
-    if(res){
-        m_model = makeFrameModel3DFromNodesAndEdges(points, edges);
     }
 }
 
@@ -237,7 +221,7 @@ void FrameModelView::InitFromDomDmcFile()
     fileName = QFileInfo(fileName).absoluteFilePath();
 
     std::vector<Polygon2D<int64_t> > polygons;
-    MeshFlow2D::LoadGeometryFiles(fileName.toStdString(), FileFormat::DomDmc, polygons);
+    MeshFlow2D::LoadGeometryFiles(fileName.toStdString(), FileFormat::DomDmc, 1.0, polygons);
     m_model = makeFrameModelFromPolygon2D<Polygon2D<int64_t> >(polygons.begin(), polygons.end());
 }
 
@@ -350,7 +334,7 @@ void SurfaceMeshView::InitFromMFile()
 //    fileName = QFileInfo(fileName).canonicalFilePath();
     QString fileName = "/home/bing/test/ex32.m";
 
-    emesh::MeshFileUtility::ImportMFile(fileName.toStdString(), *m_triangulation, 1e6);
+    emesh::MeshFileUtility::ImportMshFile(fileName.toStdString(), *m_triangulation, 1e6);
     m_refinement.reset(new CurrentRefineMethod(*m_triangulation));
     m_refinement->SetParas(math::Rad(20), 25, 1e10);
 }
@@ -384,7 +368,7 @@ void SurfaceMeshView::InitFromMshFile()
 //    fileName = QFileInfo(fileName).canonicalFilePath();
     QString fileName = "/home/bing/code/emesh/thirdpart/internal/testdata/msh/test.msh";
 
-    emesh::io::ImportMshFile(fileName.toStdString(), *m_triangulation);
+    emesh::MeshFileUtility::ImportMshFile(fileName.toStdString(), *m_triangulation, 1e3);
     m_refinement.reset(new CurrentRefineMethod(*m_triangulation));
     m_refinement->SetParas(math::Rad(20), 25, 1e10);    
 }
@@ -401,7 +385,7 @@ void SurfaceMeshView::InitFromDomDmcFile()
     fileName = QFileInfo(fileName).absoluteFilePath();
 
     auto polygons = std::make_unique<std::vector<Polygon2D<coor_t> > >();
-    MeshFlow2D::LoadGeometryFiles(fileName.toStdString(), FileFormat::DomDmc, *polygons);
+    MeshFlow2D::LoadGeometryFiles(fileName.toStdString(), FileFormat::DomDmc, 1.0, *polygons);
     auto outline = ConvexHull(*polygons);
     // polygons->push_back(outline);
 
