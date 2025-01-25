@@ -3,10 +3,10 @@
 #include "generic/geometry/TetrahedralizationIO.hpp"
 #include "generic/geometry/TriangleEvaluator.hpp"
 #include "generic/geometry/Connectivity.hpp"
+#include "generic/geometry/GeometryIO.hpp"
+#include "generic/geometry/Mesh2D.hpp"
 #include "generic/tree/BVHUtilityMT.hpp"
 #include "generic/tools/Tools.hpp"
-#include "MeshFlow2D.h"
-#include "MeshIO.h"
 #include "Painter.h"
 #include <QApplication>
 #include <QMouseEvent>
@@ -14,6 +14,7 @@
 #include <QString>
 #include <QDebug>
 using namespace view;
+using namespace generic::geometry;
 ModelView::ModelView(QWidget * parent, Qt::WindowFlags flags)
  : View3D(parent, flags), m_model(nullptr)
 {
@@ -47,11 +48,6 @@ void ModelView::mousePressEvent(QMouseEvent *e)
 FrameModelView::FrameModelView(QWidget * parent, Qt::WindowFlags flags)
  : ModelView(parent, flags)
 {
-    InitFromWktFile();
-//     InitFromPolyFile();
-//     InitFromDomDmcFile();
-//     InitFromNodeEdgeFile();
-//     InitFromConnectivityTest();
 }
 
 FrameModelView::~FrameModelView()
@@ -85,209 +81,13 @@ void FrameModelView::ShowAxis()
     }
 }
 
-void FrameModelView::InitFromWktFile()
-{
-    using namespace generic::geometry;
-    QString fileName = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/wkt/fccsp/fccsp_1.wkt";
-    fileName = QFileInfo(fileName).canonicalFilePath();
-    std::vector<PolygonWithHoles2D<coor_t> > outs;
-    if(GeometryIO::ReadWKT<PolygonWithHoles2D<coor_t> >(fileName.toStdString(), std::back_inserter(outs))){
-        auto trans = makeScaleTransform2D<coor_t>(1e-3);
-        for(auto & out : outs) {
-            Polygon2D<coor_t> simplified;
-            boost::geometry::simplify(out.outline, simplified, 100);
-            out.outline = simplified;
-            for(auto & hole : out.holes){
-                Polygon2D<coor_t> simplified;
-                boost::geometry::simplify(hole, simplified, 100);
-                hole = simplified;
-            }
-            out = trans * out;
-        }
-        m_model = makeFrameModel3DFromPolygonWithHoles2D<PolygonWithHoles2D<coor_t> >(outs.begin(), outs.end(), coor_t(0), coor_t(0.25 * 1e3));
-    }
-}
-
-void FrameModelView::InitFromPolyFile()
-{
-    using namespace geometry;
-    using namespace geometry::tet;
-    QString fileName = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/poly/test.poly";
-    fileName = QFileInfo(fileName).canonicalFilePath();
-
-    PiecewiseLinearComplex<Point3D<double> > plc;
-    if(LoadPlcFromPolyFile(fileName.toStdString(), plc)){
-        m_model = makeFrameModel3DFromPiecewiseLinearComplex(plc);
-    }
-}
-
-void FrameModelView::InitFromNodeEdgeFile()
-{
-    using namespace geometry;
-    bool res(true);
-    std::list<tet::IndexEdge> edges;
-    std::vector<Point3D<int64_t> > points;
-
-//    QString fileName = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/edgenode/fccsp.ne";
-    QString fileName = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/edgenode/fccsp.ne";
-    fileName = QFileInfo(fileName).canonicalFilePath();
-    res = emesh::io::ImportNodeAndEdges(fileName.toStdString(), points, edges);
-    if(res){
-        m_model = makeFrameModel3DFromNodesAndEdges(points, edges);
-    }
-}
-
-void FrameModelView::InitFromConnectivityTest()
-{
-    using namespace geometry;
-
-    size_t layers = 39;
-    size_t geometries = 0;
-    std::vector<std::vector<PolygonWithHoles2D<int64_t> > > layerPwhs(layers);
-    QString baseName = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/wkt/odb/odb_";
-    for(size_t i = 0; i < layers; ++i){
-        std::string filename = baseName.toStdString() + std::to_string(i + 1) + ".wkt";
-        GeometryIO::ReadWKT<PolygonWithHoles2D<int64_t> >(filename, std::back_inserter(layerPwhs[i]));
-        std::cout << "read "<< layerPwhs[i].size() << " geometries from " << filename << std::endl;
-        geometries += layerPwhs[i].size();
-    }
-    std::cout << "total geometries: " << geometries << std::endl;
-
-    auto pwhGetter  = [](const PolygonWithHoles2D<int64_t> & pwh) { return pwh; };
-    ConnectivityExtractor<int64_t> extractor;
-
-    int64_t layerH = -500000;
-    std::vector<int64_t> zRef(layers);
-    zRef[0] = 0;
-    for(size_t i = 1; i < layers; ++i)
-        zRef[i] += zRef[i - 1] + layerH;
-    std::unordered_map<size_t, std::pair<size_t, size_t> > idxMap;
-    for(size_t i = 0; i < layers; ++i){
-        auto [begin, end] = extractor.AddObjects(i, layerPwhs[i].begin(), layerPwhs[i].end(), pwhGetter);
-        extractor.AddLayerConnection(i, i + 1);
-        for(size_t id = begin, j = 0; id <= end; ++id, ++j){
-            idxMap.insert(std::make_pair(id, std::make_pair(i, j)));
-        }
-    }
-
-    std::unique_ptr<GeomConnGraph> graph = nullptr;
-    {
-        generic::tools::ProgressTimer t;
-        graph = extractor.Extract(32);
-    }
-
-    if(nullptr == graph){
-        std::cout << "fail to extract" << std::endl;
-    }
-    else{
-        std::cout << "extract successful" << std::endl;
-        m_model = std::unique_ptr<FrameModel3D>(new FrameModel3D);
-        std::list<index_t> c;
-        std::vector<std::list<index_t> > cc;
-        topology::ConnectedComponent(*graph, 0, c);
-        topology::ConnectedComponents(*graph, cc);
-        // std::cout << "component:";
-        // for(auto i : c) std::cout << " " << i;
-        // std::cout << std::endl;
-
-        std::vector<size_t> indices;
-        for(size_t i = 0; i < cc.size(); ++i){
-            indices.push_back(i);
-            // std::cout << "cc " << i + 1 << ":";
-            // for(auto j : cc[i]) std::cout << " " << j;
-            // std::cout << std::endl; 
-        }
-
-        auto sortFunc = [&cc](size_t i, size_t j){return cc[i].size() > cc[j].size(); };
-        std::sort(indices.begin(), indices.end(), sortFunc);
-        
-        FrameModel3D * model3D = dynamic_cast<FrameModel3D *>(m_model.get());
-        if(model3D){
-            for(auto i : cc[indices[2]]){
-                auto [layer, index] = idxMap.at(i);
-                model3D->AddPolygonWithHoles3D(layerPwhs[layer][index], zRef[layer], layerH, color::red);
-            }
-
-            for(auto i : cc[indices[3]]){
-                auto [layer, index] = idxMap.at(i);
-                model3D->AddPolygonWithHoles3D(layerPwhs[layer][index], zRef[layer], layerH, color::green);
-            }
-
-            for(auto i : cc[indices[4]]){
-                auto [layer, index] = idxMap.at(i);
-                model3D->AddPolygonWithHoles3D(layerPwhs[layer][index], zRef[layer], layerH, color::blue);
-            }
-
-            for(size_t layer = 0; layer < layers; ++layer){
-                if(layer != layers - 1) continue;
-                const auto & pwhs = layerPwhs[layer];
-                for(const auto & pwh : pwhs)
-                    model3D->AddPolygonWithHoles3D(pwh, zRef[layer], layerH, color::white);
-            }
-            model3D->Normalize();
-        }
-    }
-}
-
-void FrameModelView::InitFromDomDmcFile()
-{
-    using namespace emesh;
-    using namespace geometry;
-    QString fileName = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/dmcdom/2";
-    fileName = QFileInfo(fileName).absoluteFilePath();
-
-    std::vector<Polygon2D<int64_t> > polygons;
-    MeshFlow2D::LoadGeometryFiles(fileName.toStdString(), FileFormat::DomDmc, polygons);
-    m_model = makeFrameModelFromPolygon2D<Polygon2D<int64_t> >(polygons.begin(), polygons.end());
-}
-
 SurfaceModelView::SurfaceModelView(QWidget * parent, Qt::WindowFlags flags)
  : ModelView(parent, flags)
 {
-     InitFromNodeEdgeFiles();
-//    InitFromNodeEle4Files();
 }
 
 SurfaceModelView::~SurfaceModelView()
 {
-}
-
-void SurfaceModelView::InitFromNodeEdgeFiles()
-{
-    using namespace emesh;
-    using namespace geometry;
-    QString dirPath = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/poly/";
-    QString nodeFile = dirPath + "fccsp.node";
-    nodeFile = QFileInfo(nodeFile).canonicalFilePath();
-    QString edgeFile = dirPath + "fccsp.edge";
-    edgeFile = QFileInfo(edgeFile).canonicalFilePath();
-
-    bool res(true);
-    std::vector<tet::IndexEdge> edges;
-    std::vector<Point3D<coor_t> > points;
-    res = res && tet::LoadPointsFromNodeFile(nodeFile.toStdString(), points);
-    res = res && tet::LoadEdgesFromEdgeFile(edgeFile.toStdString(), edges);
-    if(res){
-        m_model = makeSurfaceModelFromNodesAndEdges(std::move(points), edges);
-    }
-}
-
-void SurfaceModelView::InitFromNodeEle4Files()
-{
-    using namespace emesh;
-    using namespace geometry;
-    QString dirPath = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/elenode/";
-    QString nodeFile = dirPath + "fccsp.node";
-    QString eleFile = dirPath + "fccsp.ele";
-
-    bool res(true);
-    std::vector<tet::IndexEle4> eles;
-    std::vector<Point3D<coor_t> > points;
-    res = res && tet::LoadPointsFromNodeFile(nodeFile.toStdString(), points);
-    res = res && tet::LoadElementsFromEleFile(eleFile.toStdString(), eles);
-    if(res){
-        m_model = makeSurfaceModelFromNodesAndEle4s(std::move(points), eles);
-    }
 }
 
 void SurfaceModelView::PerformKeyBoardAction(KeyBoardAction ka)
@@ -330,12 +130,7 @@ SurfaceMeshView::SurfaceMeshView(QWidget * parent, Qt::WindowFlags flags)
  : SurfaceModelView(parent, flags)
  , m_triangulation(new Triangulation)
 {
-//    InitFromMFile();
     InitFromWktFile();
-//    InitFromMshFile();
-//    InitFromDomDmcFile();
-//    InitFromTopologyFile();
-    //InitFromTriangulationArchive(true);
     UpdateModels();
 }
 
@@ -343,147 +138,35 @@ SurfaceMeshView::~SurfaceMeshView()
 {
 }
 
-void SurfaceMeshView::InitFromMFile()
-{
-    using namespace generic::geometry;
-//    QString fileName = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/msh/ex32.msh";
-//    fileName = QFileInfo(fileName).canonicalFilePath();
-    QString fileName = "/home/bing/test/ex32.m";
-
-    emesh::MeshFileUtility::ImportMFile(fileName.toStdString(), *m_triangulation, 1e6);
-    m_refinement.reset(new CurrentRefineMethod(*m_triangulation));
-    m_refinement->SetParas(math::Rad(20), 25, 1e10);
-}
-
 void SurfaceMeshView::InitFromWktFile()
 {
     using namespace generic::geometry;
-    QString fileName = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/wkt/fccsp/fccsp_1.wkt";
+    QString fileName = QApplication::applicationDirPath() + "/../../../data/sic.wkt";
     fileName = QFileInfo(fileName).canonicalFilePath();
-    std::vector<PolygonWithHoles2D<coor_t> > outs;
-    if(GeometryIO::ReadWKT<PolygonWithHoles2D<coor_t> >(fileName.toStdString(), std::back_inserter(outs))){
-
-        geometry::GeoTopology2D<coor_t> geoTopo;
-        for(auto iter_pwh = outs.begin(); iter_pwh != outs.end(); ++iter_pwh){
-            const auto & pwh = *iter_pwh;
-            geoTopo.AddGeometry(pwh);
-        }
-        PreTriangulation(geoTopo, 500);
+    qDebug() << "Info: loading wkt file " << fileName;
+    std::vector<Polygon2D<coor_t> > polygons;
+    if(GeometryIO::ReadWKT<Polygon2D<coor_t> >(fileName.toStdString(), std::back_inserter(polygons))){
+        qDebug() << "Info: " << polygons.size() << " polygons loaded";
+        PreTriangulation(polygons, 0);
     }
     else {
         qDebug() << "Error: fail to load file: " << fileName;
     }
     m_refinement.reset(new CurrentRefineMethod(*m_triangulation));
-    m_refinement->SetParas(math::Rad(20), 25, 1e10);
+    m_refinement->SetParas(math::Rad(15), 1e3, 3e6);
 }
 
-void SurfaceMeshView::InitFromMshFile()
+void SurfaceMeshView::PreTriangulation(const std::vector<Polygon2D<coor_t> > & polygons, coor_t mergePointDist)
 {
-    using namespace generic::geometry;
-//    QString fileName = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/msh/ex32.msh";
-//    fileName = QFileInfo(fileName).canonicalFilePath();
-    QString fileName = "/home/bing/code/emesh/thirdpart/internal/testdata/msh/test.msh";
-
-    emesh::io::ImportMshFile(fileName.toStdString(), *m_triangulation);
-    m_refinement.reset(new CurrentRefineMethod(*m_triangulation));
-    m_refinement->SetParas(math::Rad(20), 25, 1e10);    
-}
-
-void SurfaceMeshView::InitFromDomDmcFile()
-{
-    using namespace emesh;
-    using namespace geometry;
-    
-    Mesh2Ctrl meshCtrl;
-    meshCtrl.tolerance = 10;
-
-    QString fileName = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/dmcdom/1";
-    fileName = QFileInfo(fileName).absoluteFilePath();
-
-    auto polygons = std::make_unique<std::vector<Polygon2D<coor_t> > >();
-    MeshFlow2D::LoadGeometryFiles(fileName.toStdString(), FileFormat::DomDmc, *polygons);
-    auto outline = ConvexHull(*polygons);
-    // polygons->push_back(outline);
-
-    Box2D<coor_t> bbox = Extent(outline);
-    // polygons->push_back(toPolygon(bbox));//wbtest
-    meshCtrl.minEdgeLen = 30;
-    // meshCtrl.minEdgeLen = std::max(bbox.Length(), bbox.Width()) / 3000;
-    meshCtrl.maxEdgeLen = std::max(bbox.Length(), bbox.Width()) / 3;
-    meshCtrl.minAlpha = math::Rad(30);
-
-    auto segments = std::make_unique<std::vector<Segment2D<coor_t> > >();
-    MeshFlow2D::ExtractIntersections(*polygons, *segments);
-    polygons.reset();
-    
-    auto points = std::make_unique<std::vector<Point2D<coor_t> > >();
-    auto edges = std::make_unique<std::list<IndexEdge> >();
-    MeshFlow2D::ExtractTopology(*segments, *points, *edges);
-    segments.reset();
-
-    MeshFlow2D::MergeClosePointsAndRemapEdge(*points, *edges, meshCtrl.tolerance);
-//    MeshFlow2D::SplitOverlengthEdges(*points, *edges, meshCtrl.maxEdgeLen);
-
-//    size_t threshold = 10;//wbtest
-//    MeshFlow2D::AddPointsFromBalancedQuadTree(outline, *points, threshold);
-
-    MeshFlow2D::TriangulatePointsAndEdges(*points, *edges, *m_triangulation);
-    points.reset();
-    edges.reset();
-
-    m_refinement.reset(new CurrentRefineMethod(*m_triangulation));
-    m_refinement->SetParas(math::Rad(15), meshCtrl.minEdgeLen, meshCtrl.maxEdgeLen);
-}
-
-void SurfaceMeshView::InitFromTopologyFile()
-{
-    using namespace geometry;
-    geometry::GeoTopology2D<coor_t> geoTopo;
-    QString topFile = QApplication::applicationDirPath() + "/../../../thirdpart/internal/testdata/topology/test.top";
-    geoTopo.Read(topFile.toStdString());
-    PreTriangulation(geoTopo);
-    m_refinement.reset(new CurrentRefineMethod(*m_triangulation));
-    m_refinement->SetParas(math::Rad(27), 5, 50);
-}
-
-void SurfaceMeshView::InitFromTriangulationArchive(bool loadRefineState)
-{
-    using namespace geometry;
-    // QString archive = QApplication::applicationDirPath() + "/../../../test/archive.txt";
-    // geometry::tri::TriangulationUtility<Point2D<coor_t> >::Read(archive.toStdString(), *m_triangulation);
-    // m_refinement.reset(new DelaunayRefinement(*m_triangulation));
-    // if(loadRefineState){
-    //     QString state = QApplication::applicationDirPath() + "/../../../test/state.txt";
-    //     m_refinement->RestoreState(state.toStdString());
-    // }
-}
-
-void SurfaceMeshView::PreTriangulation(const geometry::GeoTopology2D<coor_t> & geoTopo, coor_t mergePointDist)
-{
-    using IndexEdge = geometry::tri::IndexEdge;
-    using Edge = std::pair<size_t, size_t>;
-    using Point = Point2D<coor_t>;
-
-    std::list<Edge > edges;
-    geoTopo.GetAllEdges(edges);
-    std::vector<Point> points = geoTopo.GetAllPoints();
-
-    try {
-        std::list<IndexEdge> indexEdges;
-        for(const auto & edge : edges) indexEdges.emplace_back(IndexEdge(edge.first, edge.second));
-
-//        geometry::tri::RemoveDuplicatesAndRemapEdges(points, indexEdges, coor_t(10));
-
-        Triangulator2D triangulator(*m_triangulation);
-        triangulator.InsertVertices(points.begin(), points.end(), [](const Point & p){ return p[0]; }, [](const Point & p){ return p[1]; });
-        triangulator.InsertEdges(indexEdges.begin(), indexEdges.end(), [](const IndexEdge & e){ return e.v1(); }, [](const IndexEdge & e){ return e.v2(); });
-        triangulator.EraseOuterTriangles();
-//        triangulator.EraseSuperTriangle();
-    }
-    catch (...) {
-        qDebug() << "Error: fail to trangulate the surface.";
-        m_triangulation->Clear();
-    }
+    mesh2d::IndexEdgeList edges;
+    mesh2d::Point2DContainer points;
+    mesh2d::Segment2DContainer segments;
+    mesh2d::ExtractIntersections(polygons, segments);
+    mesh2d::ExtractTopology(segments, points, edges);
+    // points.reserve(points.size() + steinerPoints.size());
+    // points.insert(points.end(), steinerPoints.begin(), steinerPoints.end());
+    mesh2d::MergeClosePointsAndRemapEdge(points, edges, mergePointDist);
+    mesh2d::TriangulatePointsAndEdges(points, edges, *m_triangulation);
 }
 
 void SurfaceMeshView::PerformKeyBoardAction(KeyBoardAction ka)
@@ -671,7 +354,7 @@ void SurfaceMeshView::UpdateModels()
             }
         }
 
-        m_highlightModel->SetTransform(m_model->Transform().GetTransfrom2D());
+        m_highlightModel->SetTransform(m_model->Transform().GetTransform2D());
     }
 
     UpdateEvaluation();

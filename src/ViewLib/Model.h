@@ -11,6 +11,8 @@
 #include <list>
 namespace view {
 
+using namespace generic::geometry;
+
 class Model
 {
 public:

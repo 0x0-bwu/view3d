@@ -44,11 +44,6 @@ protected:
     void ShowAxis();
 
 private:
-    void InitFromWktFile();
-    void InitFromPolyFile();
-    void InitFromDomDmcFile();
-    void InitFromNodeEdgeFile();
-    void InitFromConnectivityTest();
 };
 
 class SurfaceModelView : public ModelView
@@ -58,9 +53,6 @@ public:
     virtual ~SurfaceModelView();
 
 private:
-    void InitFromNodeEdgeFiles();
-    void InitFromNodeEle4Files();
-
 protected:
     virtual void PerformKeyBoardAction(KeyBoardAction ka);
     virtual void ShowAxis();
@@ -95,13 +87,9 @@ protected:
     void draw();
 
 private:
-    void InitFromMFile();
     void InitFromWktFile();
-    void InitFromMshFile();
-    void InitFromDomDmcFile();
-    void InitFromTopologyFile();
     void InitFromTriangulationArchive(bool loadRefineState);
-    void PreTriangulation(const geometry::GeoTopology2D<coor_t> & geoTopo, coor_t mergePointDist = 0);
+    void PreTriangulation(const std::vector<geometry::Polygon2D<coor_t> > & polygons, coor_t mergePointDist = 0);
     void PerformNextAction();
     void PerformPrevAction();
     void PerformTestAction();
@@ -111,7 +99,7 @@ private:
     void BuildBVH();
 
 private:
-    std::unique_ptr<BVH > m_bvh;
+    std::unique_ptr<BVH> m_bvh;
     std::unique_ptr<FrameModel2D> m_highlightModel;
     std::unique_ptr<Triangulation> m_triangulation;
     std::unique_ptr<DelaunayRefinement> m_refinement;

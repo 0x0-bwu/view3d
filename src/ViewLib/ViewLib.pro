@@ -12,7 +12,7 @@ include(../View3D.pri)
 INCLUDEPATH = ./ \
               ../ \
               $$GENERIC_LIB_PATH \
-              $$ROOT_DIR/thirdpart/emesh/src \
+              $$EIGEN_PATH
 
 win32:{
 INCLUDEPATH += C:\\Dev\\include\\
@@ -44,10 +44,6 @@ HEADERS += \
     ModelView.h \
     Painter.h \
     View3D.h
-
-SOURCES += \
-    $$ROOT_DIR/thirdpart/emesh/src/MeshFlow2D.cpp \
-    $$ROOT_DIR/thirdpart/emesh/src/MeshIO.cpp
 
 SOURCES += \
     Action.cpp \
